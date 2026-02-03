@@ -2,103 +2,75 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Examen Final Penal Especial</title>
+    <title>Examen Final Penal Especial - Nivel Experto</title>
     <style>
-        body { font-family: 'Times New Roman', serif; background: #f0f0f0; display: flex; justify-content: center; padding: 20px; }
-        .folder { background: white; width: 100%; max-width: 700px; padding: 40px; border: 1px solid #000; box-shadow: 10px 10px 0px #333; }
-        .header { border-bottom: 3px double #000; text-align: center; margin-bottom: 20px; padding-bottom: 10px; }
-        .q-text { font-size: 1.3rem; margin: 20px 0; font-weight: bold; color: #222; }
-        .options { display: grid; gap: 10px; }
-        .opt { padding: 15px; border: 1px solid #000; background: #fff; cursor: pointer; text-align: left; font-size: 1.1rem; }
-        .correct { background: #c8e6c9 !important; border: 2px solid #2e7d32 !important; }
-        .wrong { background: #ffcdd2 !important; border: 2px solid #c62828 !important; }
-        .next-btn { display: none; margin-top: 20px; width: 100%; padding: 15px; background: #000; color: #fff; border: none; cursor: pointer; font-weight: bold; }
+        body { font-family: 'Times New Roman', serif; background: #f0f2f5; display: flex; justify-content: center; padding: 20px; }
+        .exam-folder { background: white; width: 100%; max-width: 750px; padding: 40px; border: 2px solid #2c3e50; box-shadow: 15px 15px 0px rgba(0,0,0,0.1); }
+        .header { text-align: center; border-bottom: 4px double #2c3e50; margin-bottom: 25px; padding-bottom: 10px; }
+        .u-info { font-weight: bold; color: #c5a059; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; }
+        .question { font-size: 1.25rem; margin: 20px 0; line-height: 1.5; color: #1a252f; font-weight: bold; }
+        .options { display: grid; gap: 12px; }
+        .opt { padding: 15px; border: 1px solid #333; background: #fff; cursor: pointer; text-align: left; font-size: 1rem; transition: 0.2s; }
+        .opt:hover { background: #f8f9fa; border-color: #c5a059; }
+        .correct { background: #d4edda !important; border-color: #28a745 !important; color: #155724; font-weight: bold; }
+        .wrong { background: #f8d7da !important; border-color: #dc3545 !important; color: #721c24; }
+        .btn-next { display: none; margin-top: 25px; width: 100%; padding: 18px; background: #2c3e50; color: white; border: none; cursor: pointer; font-size: 1.1rem; font-weight: bold; }
         .result-screen { text-align: center; }
-        .result-img { max-width: 100%; height: auto; margin-top: 20px; border: 5px solid #fff; outline: 1px solid #000; }
+        .result-img { max-width: 100%; height: auto; margin: 25px 0; border: 8px solid #fff; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+        .nota { font-size: 4.5rem; font-weight: bold; margin: 0; }
     </style>
 </head>
 <body>
 
-<div class="folder" id="container">
-    <div id="quiz">
+<div class="exam-folder" id="container">
+    <div id="quiz-ui">
         <div class="header">
-            <h2>ACTA DE EXAMEN: PENAL ESPECIAL</h2>
-            <p id="stats">Pregunta 1 de 10</p>
+            <h1 style="margin:0;">MESA DE EXAMEN FINAL</h1>
+            <p id="stats" style="font-style: italic; color: #666;">Preparando acta...</p>
         </div>
-        <div id="u-name" style="color: #666; font-style: italic;"></div>
-        <div class="q-text" id="q-text"></div>
+        <div class="u-info" id="unit-name"></div>
+        <div class="question" id="q-text"></div>
         <div class="options" id="opt-grid"></div>
-        <button class="next-btn" id="btn-next" onclick="nextQuestion()">PASAR A SIGUIENTE PREGUNTA</button>
+        <button class="btn-next" id="btn-next" onclick="nextQ()">REGISTRAR RESPUESTA Y CONTINUAR</button>
     </div>
 </div>
 
 <script>
-    // --- VERIFICÁ QUE ESTOS NOMBRES SEAN IGUALES A TUS FOTOS EN GITHUB ---
-    const FOTO_EXITO = "ganaste.jpg"; 
-    const FOTO_FALLO = "perdiste.jpg";
-    // -------------------------------------------------------------------
+    // --- IMPORTANTE: COINCIDENCIA EXACTA CON TUS ARCHIVOS ---
+    const IMG_GANO = "ganaste.jpg"; 
+    const IMG_PERDIO = "perdiste.jpg";
+    // -------------------------------------------------------
 
     const banco = [
-        { u: "UNIDAD I", q: "Pena del Homicidio Simple (Art. 79):", a: "8 a 25 años de reclusión o prisión", o: ["8 a 25 años de reclusión o prisión", "8 a 25 años de prisión", "1 a 6 años", "Prisión perpetua"] },
-        { u: "UNIDAD II", q: "Pena de las Lesiones Graves (Art. 90):", a: "1 a 6 años de reclusión o prisión", o: ["1 a 6 años de reclusión o prisión", "1 a 3 años", "3 a 10 años", "6 meses a 2 años"] },
-        { u: "UNIDAD II", q: "Pena de las Lesiones Gravísimas (Art. 91):", a: "3 a 10 años de reclusión o prisión", o: ["3 a 10 años de reclusión o prisión", "1 a 6 años", "5 a 15 años", "1 a 3 años"] },
-        { u: "UNIDAD IV", q: "Abuso Sexual con acceso carnal (Art. 119 3er p):", a: "6 a 15 años de reclusión o prisión", o: ["6 a 15 años de reclusión o prisión", "4 a 10 años", "8 a 20 años", "10 a 25 años"] },
-        { u: "UNIDAD VI", q: "Pena del Robo Simple (Art. 164):", a: "1 mes a 6 años de prisión", o: ["1 mes a 6 años de prisión", "1 a 6 años", "2 a 8 años", "6 meses a 4 años"] },
-        { u: "UNIDAD VI", q: "Extorsión Simple (Art. 168):", a: "5 a 10 años de reclusión o prisión", o: ["5 a 10 años de reclusión o prisión", "3 a 8 años", "4 a 10 años", "1 mes a 6 años"] },
-        { u: "UNIDAD X", q: "Falsificación de Documento Público (Art. 292):", a: "1 a 6 años de prisión", o: ["1 a 6 años de prisión", "2 a 8 años", "6 meses a 4 años", "1 a 4 años"] },
-        { u: "UNIDAD XI", q: "Cohecho Financiero (Art. 312):", a: "Prisión de 1 a 6 años y multa", o: ["Prisión de 1 a 6 años y multa", "Prisión de 2 a 8 años", "Multa de $30.000", "Inhabilitación especial"] },
-        { u: "UNIDAD I", q: "Homicidio en Emoción Violenta (Art. 81, 1a):", a: "Reclusión de 3 a 6 años o prisión de 1 a 3 años", o: ["Reclusión de 3 a 6 años o prisión de 1 a 3 años", "1 a 5 años de prisión", "2 a 6 años", "3 a 10 años"] },
-        { u: "UNIDAD II", q: "Abandono de personas seguido de muerte (Art. 106):", a: "5 a 15 años de reclusión o prisión", o: ["5 a 15 años de reclusión o prisión", "8 a 25 años", "2 a 6 años", "3 a 10 años"] }
-    ];
-
-    let i = 0; let ok = 0;
-    let pool = banco.sort(() => Math.random() - 0.5);
-
-    function display() {
-        const d = pool[i];
-        document.getElementById("stats").innerText = `Pregunta ${i+1}/${pool.length} | Aciertos: ${ok}`;
-        document.getElementById("u-name").innerText = d.u;
-        document.getElementById("q-text").innerText = d.q;
-        const grid = document.getElementById("opt-grid");
-        grid.innerHTML = "";
-        document.getElementById("btn-next").style.display = "none";
-        
-        [...d.o].sort(() => Math.random() - 0.5).forEach(txt => {
-            const b = document.createElement("button");
-            b.className = "opt"; b.innerText = txt;
-            b.onclick = () => {
-                if(txt === d.a) { b.classList.add("correct"); ok++; }
-                else { b.classList.add("wrong"); }
-                document.querySelectorAll(".opt").forEach(btn => {
-                    btn.style.pointerEvents = "none";
-                    if(btn.innerText === d.a) btn.classList.add("correct");
-                });
-                document.getElementById("btn-next").style.display = "block";
-            };
-            grid.appendChild(b);
-        });
-    }
-
-    function nextQuestion() {
-        i++;
-        if(i < pool.length) display();
-        else {
-            const finalScore = (ok / pool.length) * 10;
-            const paso = finalScore >= 7;
-            const imgUrl = paso ? FOTO_EXITO : FOTO_FALLO;
-            
-            document.getElementById("container").innerHTML = `
-                <div class="result-screen">
-                    <h1>NOTA FINAL: ${finalScore.toFixed(1)}</h1>
-                    <h3>${paso ? "¡APROBADO!" : "A REPASAR..."}</h3>
-                    <img src="${imgUrl}?v=${new Date().getTime()}" class="result-img" alt="Resultado Final" 
-                         onerror="alert('GitHub no encuentra el archivo: ' + this.src.split('?')[0].split('/').pop())">
-                    <br><br>
-                    <button class="opt" onclick="location.reload()">Rendir de nuevo</button>
-                </div>`;
-        }
-    }
-    display();
-</script>
-</body>
-</html>
+        { 
+            u: "Unidad I: Delitos contra la Vida", 
+            q: "¿Cuál es la pena para el Homicidio en estado de emoción violenta (Art. 81, inc. 1º, a)?", 
+            a: "Reclusión de 3 a 6 años o prisión de 1 a 3 años", 
+            o: ["Reclusión de 3 a 6 años o prisión de 1 a 3 años", "Reclusión de 1 a 3 años o prisión de 3 a 6 años", "Prisión de 1 a 5 años e inhabilitación", "Prisión de 2 a 6 años o reclusión de 3 a 8"] 
+        },
+        { 
+            u: "Unidad II: Delitos contra la Salud", 
+            q: "Pena del Abandono de personas seguido de grave daño en el cuerpo o la salud (Art. 106, 2do párrafo):", 
+            a: "Reclusión o prisión de 3 a 10 años", 
+            o: ["Reclusión o prisión de 3 a 10 años", "Reclusión o prisión de 5 a 15 años", "Prisión de 2 a 6 años únicamente", "Prisión de 1 a 6 años e inhabilitación"] 
+        },
+        { 
+            u: "Unidad IV: Delitos contra la Integridad Sexual", 
+            q: "El Abuso Sexual Ultrajante (Art. 119, 2do párrafo) se reprime con:", 
+            a: "Reclusión o prisión de 4 a 10 años", 
+            o: ["Reclusión o prisión de 4 a 10 años", "Reclusión o prisión de 6 a 15 años", "Prisión de 3 a 10 años únicamente", "Prisión de 6 meses a 4 años"] 
+        },
+        { 
+            u: "Unidad VI: Delitos contra la Propiedad", 
+            q: "Determine la pena de la Extorsión Simple (Art. 168):", 
+            a: "Reclusión o prisión de 5 a 10 años", 
+            o: ["Reclusión o prisión de 5 a 10 años", "Reclusión o prisión de 3 a 8 años", "Prisión de 4 a 10 años únicamente", "Prisión de 1 mes a 6 años"] 
+        },
+        { 
+            u: "Unidad X: Delitos contra la Fe Pública", 
+            q: "Pena de la Falsificación de documentos públicos (Art. 292, 1er párrafo):", 
+            a: "Prisión de 1 a 6 años", 
+            o: ["Prisión de 1 a 6 años", "Prisión de 1 a 5 años", "Prisión de 2 a 8 años", "Prisión de 6 meses a 4 años"] 
+        },
+        { 
+            u: "Unidad XI: Del
