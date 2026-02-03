@@ -2,99 +2,103 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Examen Final de Penal - 5to Año</title>
+    <title>Examen Final Penal Especial</title>
     <style>
-        body { font-family: 'Georgia', serif; background: #f4f4f4; display: flex; justify-content: center; padding: 20px; }
-        .exam-container { background: white; width: 100%; max-width: 700px; padding: 30px; border: 1px solid #ccc; box-shadow: 5px 5px 0px #000; }
-        .header { border-bottom: 2px solid #2c3e50; text-align: center; margin-bottom: 20px; }
-        .question { font-size: 1.2rem; margin: 20px 0; font-weight: bold; }
+        body { font-family: 'Times New Roman', serif; background: #f0f0f0; display: flex; justify-content: center; padding: 20px; }
+        .folder { background: white; width: 100%; max-width: 700px; padding: 40px; border: 1px solid #000; box-shadow: 10px 10px 0px #333; }
+        .header { border-bottom: 3px double #000; text-align: center; margin-bottom: 20px; padding-bottom: 10px; }
+        .q-text { font-size: 1.3rem; margin: 20px 0; font-weight: bold; color: #222; }
         .options { display: grid; gap: 10px; }
-        .opt-btn { padding: 12px; border: 1px solid #333; background: #fff; cursor: pointer; text-align: left; }
-        .correct { background: #d4edda !important; }
-        .wrong { background: #f8d7da !important; }
-        .next-btn { display: none; width: 100%; padding: 15px; background: #2c3e50; color: white; border: none; cursor: pointer; margin-top: 20px; }
+        .opt { padding: 15px; border: 1px solid #000; background: #fff; cursor: pointer; text-align: left; font-size: 1.1rem; }
+        .correct { background: #c8e6c9 !important; border: 2px solid #2e7d32 !important; }
+        .wrong { background: #ffcdd2 !important; border: 2px solid #c62828 !important; }
+        .next-btn { display: none; margin-top: 20px; width: 100%; padding: 15px; background: #000; color: #fff; border: none; cursor: pointer; font-weight: bold; }
         .result-screen { text-align: center; }
-        /* Imagen de resultado */
-        .result-img { max-width: 100%; height: auto; margin-top: 20px; border: 4px solid #fff; box-shadow: 0 0 10px rgba(0,0,0,0.2); }
+        .result-img { max-width: 100%; height: auto; margin-top: 20px; border: 5px solid #fff; outline: 1px solid #000; }
     </style>
 </head>
 <body>
 
-<div class="exam-container" id="box">
+<div class="folder" id="container">
     <div id="quiz">
         <div class="header">
-            <h2>EXAMEN FINAL INTEGRAL</h2>
-            <p id="progreso"></p>
+            <h2>ACTA DE EXAMEN: PENAL ESPECIAL</h2>
+            <p id="stats">Pregunta 1 de 10</p>
         </div>
-        <div id="u-tag" style="color: #c5a059; font-weight: bold; font-size: 0.8rem;"></div>
-        <div class="question" id="q-text"></div>
+        <div id="u-name" style="color: #666; font-style: italic;"></div>
+        <div class="q-text" id="q-text"></div>
         <div class="options" id="opt-grid"></div>
-        <button class="next-btn" id="next-btn" onclick="nextQ()">Siguiente Pregunta</button>
+        <button class="next-btn" id="btn-next" onclick="nextQuestion()">PASAR A SIGUIENTE PREGUNTA</button>
     </div>
 </div>
 
 <script>
-    // --- CAMBIÁ ESTOS NOMBRES SEGÚN TUS ARCHIVOS EN GITHUB ---
+    // --- VERIFICÁ QUE ESTOS NOMBRES SEAN IGUALES A TUS FOTOS EN GITHUB ---
     const FOTO_EXITO = "ganaste.jpg"; 
     const FOTO_FALLO = "perdiste.jpg";
-    // --------------------------------------------------------
+    // -------------------------------------------------------------------
 
     const banco = [
-        { u: "UNIDAD I", q: "Homicidio Simple (Art. 79):", a: "8 a 25 años de reclusión o prisión", o: ["8 a 25 años de reclusión o prisión", "8 a 25 años de prisión", "10 a 25 años", "5 a 15 años"] },
-        { u: "UNIDAD II", q: "Lesiones Gravísimas (Art. 91):", a: "3 a 10 años de reclusión o prisión", o: ["3 a 10 años de reclusión o prisión", "1 a 6 años", "5 a 15 años", "1 a 3 años"] },
-        { u: "UNIDAD IV", q: "Abuso Sexual con Acceso Carnal (Art. 119 3er p):", a: "6 a 15 años de reclusión o prisión", o: ["6 a 15 años de reclusión o prisión", "8 a 20 años", "4 a 10 años", "10 a 25 años"] },
-        { u: "UNIDAD VI", q: "Robo Simple (Art. 164):", a: "1 mes a 6 años de prisión", o: ["1 mes a 6 años de prisión", "1 a 6 años", "2 a 8 años", "6 meses a 4 años"] },
-        { u: "UNIDAD XI", q: "Cohecho Financiero (Art. 312):", a: "Prisión de 1 a 6 años y multa", o: ["Prisión de 1 a 6 años y multa", "Prisión de 2 a 8 años", "Multa e inhabilitación", "Prisión de 1 a 4 años"] }
-        // Se pueden seguir sumando delitos del PDF aquí
+        { u: "UNIDAD I", q: "Pena del Homicidio Simple (Art. 79):", a: "8 a 25 años de reclusión o prisión", o: ["8 a 25 años de reclusión o prisión", "8 a 25 años de prisión", "1 a 6 años", "Prisión perpetua"] },
+        { u: "UNIDAD II", q: "Pena de las Lesiones Graves (Art. 90):", a: "1 a 6 años de reclusión o prisión", o: ["1 a 6 años de reclusión o prisión", "1 a 3 años", "3 a 10 años", "6 meses a 2 años"] },
+        { u: "UNIDAD II", q: "Pena de las Lesiones Gravísimas (Art. 91):", a: "3 a 10 años de reclusión o prisión", o: ["3 a 10 años de reclusión o prisión", "1 a 6 años", "5 a 15 años", "1 a 3 años"] },
+        { u: "UNIDAD IV", q: "Abuso Sexual con acceso carnal (Art. 119 3er p):", a: "6 a 15 años de reclusión o prisión", o: ["6 a 15 años de reclusión o prisión", "4 a 10 años", "8 a 20 años", "10 a 25 años"] },
+        { u: "UNIDAD VI", q: "Pena del Robo Simple (Art. 164):", a: "1 mes a 6 años de prisión", o: ["1 mes a 6 años de prisión", "1 a 6 años", "2 a 8 años", "6 meses a 4 años"] },
+        { u: "UNIDAD VI", q: "Extorsión Simple (Art. 168):", a: "5 a 10 años de reclusión o prisión", o: ["5 a 10 años de reclusión o prisión", "3 a 8 años", "4 a 10 años", "1 mes a 6 años"] },
+        { u: "UNIDAD X", q: "Falsificación de Documento Público (Art. 292):", a: "1 a 6 años de prisión", o: ["1 a 6 años de prisión", "2 a 8 años", "6 meses a 4 años", "1 a 4 años"] },
+        { u: "UNIDAD XI", q: "Cohecho Financiero (Art. 312):", a: "Prisión de 1 a 6 años y multa", o: ["Prisión de 1 a 6 años y multa", "Prisión de 2 a 8 años", "Multa de $30.000", "Inhabilitación especial"] },
+        { u: "UNIDAD I", q: "Homicidio en Emoción Violenta (Art. 81, 1a):", a: "Reclusión de 3 a 6 años o prisión de 1 a 3 años", o: ["Reclusión de 3 a 6 años o prisión de 1 a 3 años", "1 a 5 años de prisión", "2 a 6 años", "3 a 10 años"] },
+        { u: "UNIDAD II", q: "Abandono de personas seguido de muerte (Art. 106):", a: "5 a 15 años de reclusión o prisión", o: ["5 a 15 años de reclusión o prisión", "8 a 25 años", "2 a 6 años", "3 a 10 años"] }
     ];
 
-    let n = 0; let ok = 0;
+    let i = 0; let ok = 0;
     let pool = banco.sort(() => Math.random() - 0.5);
 
-    function load() {
-        const d = pool[n];
-        document.getElementById("progreso").innerText = `Pregunta ${n+1}/${pool.length} | Aciertos: ${ok}`;
-        document.getElementById("u-tag").innerText = d.u;
+    function display() {
+        const d = pool[i];
+        document.getElementById("stats").innerText = `Pregunta ${i+1}/${pool.length} | Aciertos: ${ok}`;
+        document.getElementById("u-name").innerText = d.u;
         document.getElementById("q-text").innerText = d.q;
         const grid = document.getElementById("opt-grid");
         grid.innerHTML = "";
-        document.getElementById("next-btn").style.display = "none";
-        [...d.o].sort(() => Math.random() - 0.5).forEach(t => {
+        document.getElementById("btn-next").style.display = "none";
+        
+        [...d.o].sort(() => Math.random() - 0.5).forEach(txt => {
             const b = document.createElement("button");
-            b.className = "opt-btn"; b.innerText = t;
+            b.className = "opt"; b.innerText = txt;
             b.onclick = () => {
-                if(t === d.a) { b.classList.add("correct"); ok++; }
+                if(txt === d.a) { b.classList.add("correct"); ok++; }
                 else { b.classList.add("wrong"); }
-                document.querySelectorAll(".opt-btn").forEach(btn => {
+                document.querySelectorAll(".opt").forEach(btn => {
                     btn.style.pointerEvents = "none";
                     if(btn.innerText === d.a) btn.classList.add("correct");
                 });
-                document.getElementById("next-btn").style.display = "block";
+                document.getElementById("btn-next").style.display = "block";
             };
             grid.appendChild(b);
         });
     }
 
-    function nextQ() {
-        n++;
-        if(n < pool.length) load();
+    function nextQuestion() {
+        i++;
+        if(i < pool.length) display();
         else {
-            const nota = (ok / pool.length) * 10;
-            const paso = nota >= 7;
-            document.getElementById("box").innerHTML = `
+            const finalScore = (ok / pool.length) * 10;
+            const paso = finalScore >= 7;
+            const imgUrl = paso ? FOTO_EXITO : FOTO_FALLO;
+            
+            document.getElementById("container").innerHTML = `
                 <div class="result-screen">
-                    <h1>NOTA FINAL: ${nota.toFixed(1)}</h1>
+                    <h1>NOTA FINAL: ${finalScore.toFixed(1)}</h1>
                     <h3>${paso ? "¡APROBADO!" : "A REPASAR..."}</h3>
-                    <img src="${paso ? FOTO_EXITO : FOTO_FALLO}" 
-                         class="result-img" 
-                         alt="Resultado" 
-                         onerror="alert('Error: No se encuentra el archivo ' + this.src.split('/').pop() + '. Revisá los nombres en GitHub.')">
+                    <img src="${imgUrl}?v=${new Date().getTime()}" class="result-img" alt="Resultado Final" 
+                         onerror="alert('GitHub no encuentra el archivo: ' + this.src.split('?')[0].split('/').pop())">
                     <br><br>
-                    <button class="opt-btn" onclick="location.reload()">Rendir de nuevo</button>
+                    <button class="opt" onclick="location.reload()">Rendir de nuevo</button>
                 </div>`;
         }
     }
-    load();
+    display();
 </script>
 </body>
 </html>
