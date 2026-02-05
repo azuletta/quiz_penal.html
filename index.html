@@ -3,107 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Examen Final de Penal - Nivel Experto</title>
+    <title>Entrenamiento Penal Especial - 5to Año</title>
     <style>
-        :root { --legal: #1a252f; --gold: #c5a059; --paper: #ffffff; }
-        body { font-family: 'Times New Roman', serif; background: #e0e0e0; display: flex; justify-content: center; padding: 20px; }
-        .exam-sheet { background: var(--paper); width: 100%; max-width: 650px; padding: 40px; border: 1px solid #000; box-shadow: 10px 10px 0px #1a252f; }
+        :root { --legal: #1a252f; --gold: #c5a059; --bg: #f4f4f4; }
+        body { font-family: 'Times New Roman', serif; background: var(--bg); display: flex; justify-content: center; padding: 20px; margin: 0; }
+        .folder { background: white; width: 100%; max-width: 700px; padding: 40px; border: 1px solid #000; box-shadow: 12px 12px 0px var(--legal); }
         .header { text-align: center; border-bottom: 3px double #000; margin-bottom: 25px; padding-bottom: 10px; }
-        .u-tag { color: var(--gold); font-weight: bold; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 10px; display: block; }
-        .question { font-size: 1.25rem; font-weight: bold; margin-bottom: 25px; line-height: 1.4; }
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .btn-unit { padding: 15px; border: 1px solid #333; background: #fff; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .btn-unit:hover { background: var(--legal); color: white; }
+        .question { font-size: 1.25rem; font-weight: bold; margin-bottom: 25px; }
         .options { display: flex; flex-direction: column; gap: 10px; }
-        .opt { padding: 14px; border: 1px solid #333; background: #fff; cursor: pointer; text-align: left; font-size: 1rem; font-family: inherit; transition: 0.15s; }
-        .opt:hover { background: #f4f4f4; border-color: var(--gold); }
-        .correct { background: #d4edda !important; border: 2px solid #28a745 !important; font-weight: bold; }
+        .opt { padding: 15px; border: 1px solid #333; background: #fff; cursor: pointer; text-align: left; font-family: inherit; }
+        .correct { background: #d4edda !important; border: 2px solid #28a745 !important; }
         .wrong { background: #f8d7da !important; border: 2px solid #dc3545 !important; }
-        .btn-next { display: none; margin-top: 30px; width: 100%; padding: 15px; background: var(--legal); color: white; border: none; cursor: pointer; font-weight: bold; }
+        .next-btn { display: none; margin-top: 25px; width: 100%; padding: 15px; background: var(--legal); color: white; border: none; cursor: pointer; font-weight: bold; }
         .result-screen { text-align: center; }
-        .res-img { max-width: 100%; height: auto; border: 5px solid white; outline: 1px solid #000; margin-top: 20px; }
-        .nota { font-size: 5rem; font-weight: bold; margin: 0; }
+        .res-img { max-width: 100%; height: auto; margin-top: 20px; border: 5px solid #fff; outline: 1px solid #000; }
     </style>
 </head>
 <body>
 
-<div class="exam-sheet" id="box">
-    <div id="game">
-        <div class="header">
-            <h2 style="margin:0;">MESA DE EXAMEN FINAL</h2>
-            <p id="counter" style="margin:5px 0; font-style: italic; color: #666;"></p>
-        </div>
-        <span class="u-tag" id="unit"></span>
-        <div class="question" id="q-text"></div>
-        <div class="options" id="opt-container"></div>
-        <button class="btn-next" id="btn-next" onclick="nextQ()">REGISTRAR RESPUESTA</button>
+<div class="folder" id="app">
     </div>
-</div>
 
 <script>
     const IMG_GANO = "ganaste.jpg"; 
     const IMG_PERDO = "perdiste.jpg";
 
     const banco = [
-        {
-            u: "Unidad I: Vida",
-            q: "Homicidio en Emoción Violenta (Art. 81, 1º, a):",
-            a: "Reclusión de 3 a 6 años o prisión de 1 a 3 años",
-            o: ["Reclusión de 3 a 6 años o prisión de 1 a 3 años", "Reclusión de 1 a 3 años o prisión de 3 a 6 años", "Reclusión de 2 a 5 años o prisión de 1 a 4 años", "Reclusión de 3 a 8 años o prisión de 2 a 5 años"]
-        },
-        {
-            u: "Unidad II: Integridad",
-            q: "Lesiones Gravísimas (Art. 91):",
-            a: "Reclusión o prisión de 3 a 10 años",
-            o: ["Reclusión o prisión de 3 a 10 años", "Reclusión o prisión de 1 a 6 años", "Reclusión o prisión de 5 a 15 años", "Reclusión o prisión de 2 a 8 años"]
-        },
-        {
-            u: "Unidad IV: Integridad Sexual",
-            q: "Abuso Sexual Ultrajante (Art. 119, 2º p.):",
-            a: "Reclusión o prisión de 4 a 10 años",
-            o: ["Reclusión o prisión de 4 a 10 años", "Reclusión o prisión de 6 a 15 años", "Reclusión o prisión de 3 a 10 años", "Reclusión o prisión de 5 a 12 años"]
-        },
-        {
-            u: "Unidad VI: Propiedad",
-            q: "Extorsión mediante intimidación (Art. 168):",
-            a: "Reclusión o prisión de 5 a 10 años",
-            o: ["Reclusión o prisión de 5 a 10 años", "Reclusión o prisión de 3 a 8 años", "Reclusión o prisión de 4 a 12 años", "Reclusión o prisión de 1 a 6 años"]
-        },
-        {
-            u: "Unidad X: Fe Pública",
-            q: "Falsificación de Documento Público (Art. 292):",
-            a: "Prisión de 1 a 6 años",
-            o: ["Prisión de 1 a 6 años", "Prisión de 2 a 8 años", "Prisión de 1 a 5 años", "Prisión de 3 a 10 años"]
-        },
-        {
-            u: "Unidad I: Vida",
-            q: "Homicidio Culposo básico (Art. 84):",
-            a: "Prisión de 1 a 5 años e inhabilitación especial",
-            o: ["Prisión de 1 a 5 años e inhabilitación especial", "Prisión de 2 a 6 años e inhabilitación especial", "Prisión de 1 a 3 años e inhabilitación especial", "Prisión de 3 a 6 años e inhabilitación especial"]
-        },
-        {
-            u: "Unidad VI: Propiedad",
-            q: "Hurto Simple (Art. 162):",
-            a: "Prisión de un mes a dos años",
-            o: ["Prisión de un mes a dos años", "Prisión de un mes a seis años", "Prisión de dos a ocho años", "Prisión de un año a seis años"]
-        },
-        {
-            u: "Unidad VI: Propiedad",
-            q: "Robo Simple (Art. 164):",
-            a: "Prisión de un mes a seis años",
-            o: ["Prisión de un mes a seis años", "Prisión de un mes a dos años", "Prisión de un año a seis años", "Prisión de dos a ocho años"]
-        }
+        // UNIDAD I
+        { u: "Unidad I", q: "Homicidio en Emoción Violenta (Art. 81, 1º, a):", a: "Reclusión de 3 a 6 años o prisión de 1 a 3 años", o: ["Reclusión de 3 a 6 años o prisión de 1 a 3 años", "Reclusión de 1 a 3 años o prisión de 3 a 6 años", "Reclusión de 2 a 5 años o prisión de 1 a 4 años", "Reclusión de 3 a 8 años o prisión de 2 a 5 años"] },
+        { u: "Unidad I", q: "Instigación o ayuda al suicidio consumado (Art. 83):", a: "Prisión de uno a cuatro años", o: ["Prisión de uno a cuatro años", "Prisión de dos a seis años", "Prisión de tres a ocho años", "Prisión de uno a cinco años"] },
+        // UNIDAD II
+        { u: "Unidad II", q: "Lesiones Gravísimas (Art. 91):", a: "Reclusión o prisión de 3 a 10 años", o: ["Reclusión o prisión de 3 a 10 años", "Reclusión o prisión de 1 a 6 años", "Reclusión o prisión de 5 a 15 años", "Reclusión o prisión de 2 a 8 años"] },
+        { u: "Unidad II", q: "Abandono de personas seguido de muerte (Art. 106):", a: "Reclusión o prisión de 5 a 15 años", o: ["Reclusión o prisión de 5 a 15 años", "Reclusión o prisión de 3 a 10 años", "Reclusión o prisión de 8 a 25 años", "Reclusión o prisión de 2 a 12 años"] },
+        // UNIDAD IV
+        { u: "Unidad IV", q: "Abuso Sexual con Acceso Carnal (Art. 119, 3er p.):", a: "Reclusión o prisión de 6 a 15 años", o: ["Reclusión o prisión de 6 a 15 años", "Reclusión o prisión de 4 a 10 años", "Reclusión o prisión de 8 a 20 años", "Reclusión o prisión de 5 a 12 años"] },
+        // UNIDAD VI
+        { u: "Unidad VI", q: "Robo Simple (Art. 164):", a: "Prisión de un mes a seis años", o: ["Prisión de un mes a seis años", "Prisión de un mes a dos años", "Prisión de un año a seis años", "Prisión de dos a ocho años"] },
+        { u: "Unidad VI", q: "Hurto Simple (Art. 162):", a: "Prisión de un mes a dos años", o: ["Prisión de un mes a dos años", "Prisión de un mes a seis años", "Prisión de dos a ocho años", "Prisión de un año a seis años"] }
     ];
 
-    let n = 0; let score = 0;
-    let pool = banco.sort(() => Math.random() - 0.5);
+    let unidadElegida = "";
+    let preguntasUnidad = [];
+    let actual = 0;
+    let aciertos = 0;
 
-    function start() {
-        const d = pool[n];
-        document.getElementById("counter").innerText = `Pregunta ${n+1}/${pool.length} | Aciertos: ${score}`;
-        document.getElementById("unit").innerText = d.u;
-        document.getElementById("q-text").innerText = d.q;
-        const box = document.getElementById("opt-container");
-        box.innerHTML = "";
-        document.getElementById("btn-next").style.display = "none";
+    function mostrarMenu() {
+        const unidades = [...new Set(banco.map(p => p.u))];
+        let html = `<div class="header"><h2>ELIGE LA UNIDAD A EXAMINAR</h2></div><div class="menu-grid">`;
+        unidades.forEach(u => {
+            html += `<button class="btn-unit" onclick="empezarUnidad('${u}')">${u.toUpperCase()}</button>`;
+        });
+        html += `</div>`;
+        document.getElementById("app").innerHTML = html;
+    }
 
-        [...d.o].sort(() => Math.random() - 0.5).forEach(t => {
-            const b = document.createElement("button");
-            b.className = "opt"; b
+    function empezarUnidad(u) {
+        unidadElegida = u;
+        preguntasUnidad = banco.filter(p => p.u === u).sort(() => Math.random() - 0.5);
+        actual = 0;
+        aciertos = 0;
+        renderPregunta();
+    }
+
+    function renderPregunta() {
+        const d = preguntasUnidad[actual];
+        let html = `
+            <div class="header">
+                <h2>EXAMEN: ${unidadElegida}</h2>
+                <p>Pregunta ${actual + 1}/${preguntasUnidad.length} | Aciertos: ${aciertos}</p>
+            </div>
+            <div class="question">${d.q}</div>
+            <div class="options">`;
+        
+        [...d.o].sort(() => Math.random() - 0.5).forEach(txt => {
+            html += `<button class="opt" onclick="validar(this, '${txt}', '${d.a}')">${txt}</button>`;
+        });
+
+        html += `</div><button id="next" class="next-btn" onclick="proxima()">CONTINUAR</button>`;
+        document.getElementById("app").innerHTML = html;
+    }
+
+    function validar(btn, sel, cor) {
+        const btns = document.querySelectorAll(".opt");
+        btns.forEach(b => b.style.pointerEvents = "none");
+        if(sel === cor) { btn.classList.add("correct"); aciertos++; }
+        else { 
+            btn.classList.add("wrong");
+            btns.forEach(b => { if(b.innerText === cor) b.classList.add("correct"); });
+        }
+        document.getElementById("next").style.display = "block";
+    }
+
+    function proxima() {
+        actual++;
+        if(actual < preguntasUnidad.length) renderPregunta();
+        else finalizar();
+    }
+
+    function finalizar() {
+        const nota = (aciertos / preguntasUnidad.length) * 10;
+        const gano = nota >= 7;
+        document.getElementById("app").innerHTML = `
+            <div class="result-screen">
+                <h1 style="font-size:4rem; margin:0;">${nota.toFixed(1)}</h1>
+                <h3>${gano ? "APROBADO" : "REPROBADO"}</h3>
+                <img src="${gano ? IMG_GANO : IMG_PERDO}" class="res-img" onerror="this.style.display='none'">
+                <br><br>
+                <button class="btn-unit" onclick="mostrarMenu()">VOLVER AL MENÚ</button>
+            </div>`;
+    }
+
+    mostrarMenu();
+</script>
+</body>
+</html>
