@@ -3,94 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Examen Final Penal</title>
+    <title>Examen Final de Derecho Penal - Nivel Máximo</title>
     <style>
-        body { font-family: 'Times New Roman', serif; background: #e5e5e5; padding: 10px; display: flex; justify-content: center; }
-        .exam-card { background: white; width: 100%; max-width: 600px; padding: 25px; border: 2px solid #2c3e50; box-shadow: 5px 5px 15px rgba(0,0,0,0.2); }
-        .header { text-align: center; border-bottom: 2px solid #2c3e50; margin-bottom: 15px; }
-        .q-text { font-size: 1.2rem; font-weight: bold; margin: 20px 0; color: #1a252f; }
-        .opt { display: block; width: 100%; padding: 15px; margin-bottom: 10px; border: 1px solid #333; background: #fff; cursor: pointer; text-align: left; font-size: 1rem; }
-        .correct { background: #d4edda !important; border-color: #28a745 !important; }
-        .wrong { background: #f8d7da !important; border-color: #dc3545 !important; }
-        .btn-next { display: none; width: 100%; padding: 15px; background: #2c3e50; color: white; border: none; font-weight: bold; cursor: pointer; }
-        .result-img { max-width: 100%; height: auto; margin-top: 15px; border: 4px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        :root { --legal-blue: #1a252f; --paper: #ffffff; --gold: #c5a059; }
+        body { font-family: 'Times New Roman', serif; background: #dcdde1; display: flex; justify-content: center; padding: 15px; margin: 0; }
+        .exam-sheet { background: var(--paper); width: 100%; max-width: 650px; padding: 35px; border: 1px solid #000; box-shadow: 12px 12px 0px #1a252f; position: relative; }
+        .header { text-align: center; border-bottom: 3px double #000; margin-bottom: 25px; }
+        .u-tag { color: var(--gold); font-weight: bold; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 10px; display: block; }
+        .question { font-size: 1.2rem; font-weight: bold; margin-bottom: 25px; line-height: 1.4; color: #000; }
+        .options { display: flex; flex-direction: column; gap: 10px; }
+        .opt { padding: 15px; border: 1px solid #333; background: #fff; cursor: pointer; text-align: left; font-size: 1rem; font-family: inherit; transition: 0.2s; }
+        .opt:hover { background: #f1f2f6; border-color: var(--gold); }
+        .correct { background: #d4edda !important; border: 2px solid #28a745 !important; font-weight: bold; }
+        .wrong { background: #f8d7da !important; border: 2px solid #dc3545 !important; }
+        .footer { margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .btn-next { display: none; padding: 12px 25px; background: var(--legal-blue); color: #fff; border: none; cursor: pointer; font-weight: bold; font-size: 1rem; }
+        .result-screen { text-align: center; }
+        .res-img { max-width: 100%; height: auto; border: 4px solid #fff; outline: 1px solid #000; margin-top: 20px; }
+        .nota-final { font-size: 5rem; margin: 0; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="exam-card" id="main">
+<div class="exam-sheet" id="box">
     <div id="game">
         <div class="header">
-            <h2 style="margin:5px;">EXAMEN PENAL ESPECIAL</h2>
-            <p id="stats" style="font-size:0.9rem; color:#666;">Cargando sistema...</p>
+            <h2 style="margin:0;">MESA EXAMINADORA: PENAL ESPECIAL</h2>
+            <p id="counter" style="margin:5px 0; font-style: italic; color: #666;"></p>
         </div>
-        <div id="unit" style="color: #c5a059; font-weight: bold; font-size: 0.8rem;"></div>
-        <div class="q-text" id="question"></div>
-        <div id="options-box"></div>
-        <button class="btn-next" id="btn-next" onclick="nextQ()">SIGUIENTE PREGUNTA</button>
+        <span class="u-tag" id="unit"></span>
+        <div class="question" id="q-text"></div>
+        <div class="options" id="opt-container"></div>
+        <div class="footer">
+            <div id="feedback" style="font-weight:bold;"></div>
+            <button class="btn-next" id="btn-next" onclick="nextQ()">SIGUIENTE PREGUNTA</button>
+        </div>
     </div>
 </div>
 
 <script>
-    // VERIFICAR NOMBRES AQUÍ
-    const IMG_GANO = "ganaste.jpg"; 
-    const IMG_PERDO = "perdiste.jpg";
+    // --- CONFIGURACIÓN DE IMÁGENES ---
+    const IMG_WIN = "ganaste.jpg"; 
+    const IMG_LOSE = "perdiste.jpg";
+    // ---------------------------------
 
-    const preguntas = [
-        { u: "UNIDAD I", q: "Pena del Homicidio Simple (Art. 79):", a: "8 a 25 años de reclusión o prisión", o: ["8 a 25 años de reclusión o prisión", "8 a 25 años de prisión", "1 a 6 años", "Prisión perpetua"] },
-        { u: "UNIDAD II", q: "Pena de las Lesiones Gravísimas (Art. 91):", a: "3 a 10 años de reclusión o prisión", o: ["3 a 10 años de reclusión o prisión", "1 a 6 años", "5 a 15 años", "1 a 3 años"] },
-        { u: "UNIDAD IV", q: "Abuso Sexual con Acceso Carnal (Art. 119 3er p):", a: "6 a 15 años de reclusión o prisión", o: ["6 a 15 años de reclusión o prisión", "8 a 20 años", "4 a 10 años", "10 a 25 años"] },
-        { u: "UNIDAD VI", q: "Extorsión Simple (Art. 168):", a: "5 a 10 años de reclusión o prisión", o: ["5 a 10 años de reclusión o prisión", "3 a 8 años", "4 a 10 años", "1 mes a 6 años"] },
-        { u: "UNIDAD XI", q: "Cohecho Financiero (Art. 312):", a: "Prisión de 1 a 6 años y multa de 2 a 5 veces el beneficio", o: ["Prisión de 1 a 6 años y multa de 2 a 5 veces el beneficio", "Prisión de 2 a 8 años", "Multa de $30.000", "Inhabilitación"] }
+    const banco = [
+        {
+            u: "Unidad I: Delitos contra las Personas",
+            q: "¿Cuál es la pena para el Homicidio en Emoción Violenta (Art. 81, 1º, a)?",
+            a: "Reclusión de 3 a 6 años o prisión de 1 a 3 años",
+            o: ["Reclusión de 3 a 6 años o prisión de 1 a 3 años", "Reclusión de 1 a 3 años o prisión de 3 a 6 años", "Reclusión de 2 a 5 años o prisión de 1 a 4 años", "Reclusión de 3 a 8 años o prisión de 2 a 5 años"]
+        },
+        {
+            u: "Unidad II: Delitos contra la Integridad Física",
+            q: "Pena para las Lesiones Gravísimas (Art. 91):",
+            a: "Reclusión o prisión de 3 a 10 años",
+            o: ["Reclusión o prisión de 3 a 10 años", "Reclusión o prisión de 1 a 6 años", "Reclusión o prisión de 5 a 15 años", "Reclusión o prisión de 2 a 8 años"]
+        },
+        {
+            u: "Unidad IV: Delitos contra la Integridad Sexual",
+            q: "Pena del Abuso Sexual Ultrajante (Art. 119, 2º párrafo):",
+            a: "Reclusión o prisión de 4 a 10 años",
+            o: ["Reclusión o prisión de 4 a 10 años", "Reclusión o prisión de 6 a 15 años", "Reclusión o prisión de 3 a 10 años", "Reclusión o prisión de 5 a 12 años"]
+        },
+        {
+            u: "Unidad VI: Delitos contra la Propiedad",
+            q: "Escala penal para la Extorsión Simple (Art. 168):",
+            a: "Reclusión o prisión de 5 a 10 años",
+            o: ["Reclusión o prisión de 5 a 10 años", "Reclusión o prisión de 3 a 8 años", "Reclusión o prisión de 1 a 6 años", "Reclusión o prisión de 4 a 12 años"]
+        },
+        {
+            u: "Unidad XI: Orden Económico y Financiero",
+            q: "Pena para el Cohecho Financiero (Art. 312):",
+            a: "Prisión de 1 a 6 años y multa de 2 a 5 veces",
+            o: ["Prisión de 1 a 6 años y multa de 2 a 5 veces", "Prisión de 2 a 8 años y multa de 3 a 6 veces", "Prisión de 1 a 4 años y multa de 2 a 4 veces", "Prisión de 3 a 10 años y multa de 1 a 5 veces"]
+        },
+        {
+            u: "Unidad VI: Delitos contra la Propiedad",
+            q: "Pena para el Hurto Simple (Art. 162):",
+            a: "Prisión de 1 mes a 2 años",
+            o: ["Prisión de 1 mes a 2 años", "Prisión de 1 mes a 6 años", "Prisión de 6 meses a 3 años", "Prisión de 15 días a 1 año"]
+        },
+        {
+            u: "Unidad X: Delitos contra la Fe Pública",
+            q: "Falsificación de documentos públicos (Art. 292, 1º párrafo):",
+            a: "Prisión de 1 a 6 años",
+            o: ["Prisión de 1 a 6 años", "Prisión de 2 a 8 años", "Prisión de 1 a 5 años", "Prisión de 3 a 10 años"]
+        }
     ];
 
-    let current = 0; let score = 0;
-    let pool = preguntas.sort(() => Math.random() - 0.5);
+    let idx = 0; let score = 0;
+    let pool = banco.sort(() => Math.random() - 0.5);
 
-    function start() {
-        const d = pool[current];
-        document.getElementById("stats").innerText = `Pregunta ${current + 1}/${pool.length} | Aciertos: ${score}`;
+    function load() {
+        const d = pool[idx];
+        document.getElementById("counter").innerText = `Examen Pregunta ${idx+1} de ${pool.length} | Aciertos: ${score}`;
         document.getElementById("unit").innerText = d.u;
-        document.getElementById("question").innerText = d.q;
-        const box = document.getElementById("options-box");
-        box.innerHTML = "";
+        document.getElementById("q-text").innerText = d.q;
         document.getElementById("btn-next").style.display = "none";
+        document.getElementById("feedback").innerText = "";
+        
+        const container = document.getElementById("opt-container");
+        container.innerHTML = "";
 
-        [...d.o].sort(() => Math.random() - 0.5).forEach(t => {
+        [...d.o].sort(() => Math.random() - 0.5).forEach(text => {
             const b = document.createElement("button");
             b.className = "opt";
-            b.innerText = t;
-            b.onclick = () => {
-                const btns = document.querySelectorAll(".opt");
-                btns.forEach(btn => btn.style.pointerEvents = "none");
-                if(t === d.a) { b.classList.add("correct"); score++; }
-                else { b.classList.add("wrong"); }
-                btns.forEach(btn => { if(btn.innerText === d.a) btn.classList.add("correct"); });
-                document.getElementById("btn-next").style.display = "block";
-            };
-            box.appendChild(b);
+            b.innerText = text;
+            b.onclick = () => check(b, text, d.a);
+            container.appendChild(b);
         });
     }
 
-    function nextQ() {
-        current++;
-        if(current < pool.length) start();
-        else {
-            const nota = (score / pool.length) * 10;
-            const paso = nota >= 7;
-            document.getElementById("main").innerHTML = `
-                <div style="text-align:center">
-                    <h1>NOTA: ${nota.toFixed(1)}</h1>
-                    <h2>${paso ? '¡APROBADO!' : 'REPROBADO'}</h2>
-                    <img src="${paso ? IMG_GANO : IMG_PERDO}" class="result-img" onerror="this.style.display='none'; alert('No se encontró la foto: ' + this.src.split('/').pop())">
-                    <br><br>
-                    <button class="opt" style="text-align:center" onclick="location.reload()">REINTENTAR</button>
-                </div>`;
+    function check(btn, sel, cor) {
+        const btns = document.querySelectorAll(".opt");
+        btns.forEach(b => b.style.pointerEvents = "none");
+        
+        if(sel === cor) {
+            btn.classList.add("correct");
+            score++;
+            document.getElementById("feedback").innerText = "RESPUESTA REGISTRADA: CORRECTA";
+            document.getElementById("feedback").style.color = "#28a745";
+        } else {
+            btn.classList.add("wrong");
+            document.getElementById("feedback").innerText = "RESPUESTA REGISTRADA: INCORRECTA";
+            document.getElementById("feedback").style.color = "#dc3545";
+            btns.forEach(b => { if(b.innerText === cor) b.classList.add("correct"); });
         }
+        document.getElementById("btn-next").style.display = "block";
     }
 
-    // Iniciar manualmente para evitar el bloqueo de "preparando acta"
-    window.onload = start;
+    function nextQ() {
+        idx++;
+        if(idx < pool.length) load();
+        else showResult();
+    }
+
+    function showResult() {
+        const nota = (score / pool.length) * 10;
+        const paso = nota >= 7;
+        const img = paso ? IMG_WIN : IMG_LOSE;
+        
+        document.getElementById("box").innerHTML = `
+            <div class="result-screen">
+                <h1 class="nota-final" style="color:${paso ? '#28a745':'#dc3545'}">${nota.toFixed(1)}</h1>
+                <h2>${paso ? "HA APROBADO EL EXAMEN" : "NO ALCANZA EL PUNTAJE MÍNIMO"}</h2>
+                <img src="${img}" class="res-img" onerror="this.style.display='none'; alert('Error: No se encuentra ' + this.src.split('/').pop())">
+                <br><br>
+                <button class="opt" style="width:100%; text-align:center;" onclick="location.reload()">REINTENTAR EXAMEN</button>
+            </div>
+        `;
+    }
+
+    window.onload = load;
 </script>
 
 </body>
