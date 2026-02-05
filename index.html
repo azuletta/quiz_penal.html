@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulador Penal Especial - 5to Año</title>
+    <title>Simulador Penal Especial - Todas las Unidades</title>
     <style>
-        :root { --legal: #1a252f; --gold: #c5a059; --bg: #f2f2f2; }
-        body { font-family: 'Times New Roman', serif; background: var(--bg); display: flex; justify-content: center; padding: 20px; margin: 0; }
-        .folder { background: white; width: 100%; max-width: 700px; padding: 35px; border: 1px solid #000; box-shadow: 10px 10px 0px var(--legal); }
+        :root { --legal: #1a252f; --gold: #c5a059; --bg: #e8ecef; }
+        body { font-family: 'Times New Roman', serif; background: var(--bg); display: flex; justify-content: center; padding: 15px; margin: 0; }
+        .folder { background: white; width: 100%; max-width: 750px; padding: 35px; border: 1px solid #000; box-shadow: 10px 10px 0px var(--legal); }
         .header { text-align: center; border-bottom: 3px double #000; margin-bottom: 25px; padding-bottom: 10px; }
-        h2 { margin: 5px 0; color: var(--legal); }
-        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-        .btn-unit { padding: 15px; border: 1px solid #333; background: #fff; cursor: pointer; font-weight: bold; font-family: inherit; font-size: 0.9rem; transition: 0.2s; }
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+        @media (max-width: 500px) { .menu-grid { grid-template-columns: 1fr; } }
+        .btn-unit { padding: 12px; border: 1px solid #333; background: #fff; cursor: pointer; font-weight: bold; font-family: inherit; transition: 0.2s; }
         .btn-unit:hover { background: var(--legal); color: white; }
-        .question { font-size: 1.25rem; font-weight: bold; margin: 25px 0; line-height: 1.4; }
-        .opt { display: block; width: 100%; padding: 15px; margin-bottom: 10px; border: 1px solid #333; background: #fff; cursor: pointer; text-align: left; font-size: 1rem; font-family: inherit; }
+        .q-text { font-size: 1.25rem; font-weight: bold; margin: 20px 0; line-height: 1.4; color: #1a252f; }
+        .opt { display: block; width: 100%; padding: 14px; margin-bottom: 8px; border: 1px solid #333; background: #fff; cursor: pointer; text-align: left; font-size: 0.95rem; font-family: inherit; }
         .correct { background: #d4edda !important; border: 2px solid #28a745 !important; font-weight: bold; }
         .wrong { background: #f8d7da !important; border: 2px solid #dc3545 !important; }
-        .next-btn { display: none; width: 100%; padding: 15px; background: var(--legal); color: white; border: none; font-weight: bold; cursor: pointer; margin-top: 20px; }
+        .btn-next { display: none; width: 100%; padding: 15px; background: var(--legal); color: white; border: none; font-weight: bold; cursor: pointer; margin-top: 15px; }
         .result-screen { text-align: center; }
         .res-img { max-width: 100%; height: auto; margin-top: 20px; border: 5px solid #fff; outline: 1px solid #000; }
         .hidden { display: none; }
@@ -28,16 +28,19 @@
 <div class="folder">
     <div id="section-menu">
         <div class="header">
-            <h2>MESA DE EXAMEN</h2>
-            <p style="font-style: italic;">Seleccione la unidad para comenzar el interrogatorio</p>
+            <h2>MESA DE EXAMEN PENAL</h2>
+            <p>Seleccione la unidad para ser evaluado</p>
         </div>
         <div class="menu-grid">
-            <button class="btn-unit" onclick="empezar('I')">UNIDAD I: VIDA</button>
-            <button class="btn-unit" onclick="empezar('II')">UNIDAD II: INTEGRIDAD</button>
-            <button class="btn-unit" onclick="empezar('IV')">UNIDAD IV: SEXUALIDAD</button>
-            <button class="btn-unit" onclick="empezar('VI')">UNIDAD VI: PROPIEDAD</button>
-            <button class="btn-unit" onclick="empezar('X')">UNIDAD X: FE PÚBLICA</button>
-            <button class="btn-unit" onclick="empezar('XI')">UNIDAD XI: ECONÓMICOS</button>
+            <button class="btn-unit" onclick="empezar('I')">U1: VIDA</button>
+            <button class="btn-unit" onclick="empezar('II')">U2: LESIONES</button>
+            <button class="btn-unit" onclick="empezar('III')">U3: HONOR</button>
+            <button class="btn-unit" onclick="empezar('IV')">U4: SEXUALIDAD</button>
+            <button class="btn-unit" onclick="empezar('V')">U5: LIBERTAD</button>
+            <button class="btn-unit" onclick="empezar('VI')">U6: PROPIEDAD</button>
+            <button class="btn-unit" onclick="empezar('IX')">U9: SEGURIDAD</button>
+            <button class="btn-unit" onclick="empezar('XIII')">U13: ADM. PÚBLICA</button>
+            <button class="btn-unit" onclick="empezar('XI')">U11: ORDEN ECON.</button>
         </div>
     </div>
 
@@ -46,18 +49,18 @@
             <h2 id="quiz-title">UNIDAD</h2>
             <p id="stats"></p>
         </div>
-        <div class="question" id="q-text"></div>
+        <div class="q-text" id="q-text"></div>
         <div id="options-box"></div>
-        <button class="next-btn" id="next-btn" onclick="proxima()">CONTINUAR EXAMEN</button>
+        <button class="btn-next" id="btn-next" onclick="proxima()">SIGUIENTE PREGUNTA</button>
     </div>
 
     <div id="section-results" class="hidden">
         <div class="result-screen">
             <h1 id="nota-final" style="font-size: 5rem; margin: 0;"></h1>
-            <h3 id="mensaje-final"></h3>
+            <h2 id="mensaje-final"></h2>
             <img id="img-final" src="" class="res-img" onerror="this.style.display='none'">
             <br><br>
-            <button class="btn-unit" style="width:100%" onclick="location.reload()">VOLVER AL INICIO</button>
+            <button class="btn-unit" style="width:100%" onclick="location.reload()">VOLVER AL MENÚ</button>
         </div>
     </div>
 </div>
@@ -67,12 +70,79 @@
     const IMG_PERDO = "perdiste.jpg";
 
     const banco = [
+        // UNIDAD I: VIDA
+        { u: "I", q: "Homicidio Simple (Art. 79):", a: "8 a 25 años de reclusión o prisión", o: ["8 a 25 años de reclusión o prisión", "5 a 15 años de reclusión o prisión", "3 a 10 años de reclusión o prisión", "1 a 6 años de reclusión o prisión"] },
         { u: "I", q: "Homicidio en Emoción Violenta (Art. 81, 1º, a):", a: "Reclusión de 3 a 6 años o prisión de 1 a 3 años", o: ["Reclusión de 3 a 6 años o prisión de 1 a 3 años", "Reclusión de 1 a 3 años o prisión de 3 a 6 años", "Reclusión de 2 a 5 años o prisión de 1 a 4 años", "Reclusión de 3 a 8 años o prisión de 2 a 5 años"] },
-        { u: "I", q: "Instigación o ayuda al suicidio consumado (Art. 83):", a: "Prisión de uno a cuatro años", o: ["Prisión de uno a cuatro años", "Prisión de dos a seis años", "Prisión de tres a ocho años", "Prisión de uno a cinco años"] },
-        { u: "II", q: "Lesiones Gravísimas (Art. 91):", a: "Reclusión o prisión de 3 a 10 años", o: ["Reclusión o prisión de 3 a 10 años", "Reclusión o prisión de 1 a 6 años", "Reclusión o prisión de 5 a 15 años", "Reclusión o prisión de 2 a 8 años"] },
-        { u: "II", q: "Abandono de personas seguido de muerte (Art. 106):", a: "Reclusión o prisión de 5 a 15 años", o: ["Reclusión o prisión de 5 a 15 años", "Reclusión o prisión de 3 a 10 años", "Reclusión o prisión de 8 a 25 años", "Reclusión o prisión de 2 a 12 años"] },
+        // UNIDAD II: LESIONES
+        { u: "II", q: "Lesiones Graves (Art. 90):", a: "Reclusión o prisión de uno a seis años", o: ["Reclusión o prisión de uno a seis años", "Reclusión o prisión de tres a diez años", "Reclusión o prisión de dos a ocho años", "Reclusión o prisión de un mes a un año"] },
+        { u: "II", q: "Abandono de persona básico (Art. 106):", a: "Prisión de dos a seis años", o: ["Prisión de dos a seis años", "Prisión de tres a diez años", "Prisión de cinco a quince años", "Prisión de uno a cuatro años"] },
+        // UNIDAD III: HONOR
+        { u: "III", q: "Calumnia (Art. 109):", a: "Multa de $3.000 a $30.000", o: ["Multa de $3.000 a $30.000", "Multa de $1.500 a $20.000", "Multa de $5.000 a $50.000", "Multa de $2.000 a $20.000"] },
+        { u: "III", q: "Injuria (Art. 110):", a: "Multa de $1.500 a $20.000", o: ["Multa de $1.500 a $20.000", "Multa de $3.000 a $30.000", "Multa de $1.000 a $10.000", "Multa de $5.000 a $50.000"] },
+        // UNIDAD IV: SEXUALIDAD
         { u: "IV", q: "Abuso Sexual Ultrajante (Art. 119, 2º p.):", a: "Reclusión o prisión de 4 a 10 años", o: ["Reclusión o prisión de 4 a 10 años", "Reclusión o prisión de 6 a 15 años", "Reclusión o prisión de 3 a 10 años", "Reclusión o prisión de 5 a 12 años"] },
-        { u: "VI", q: "Extorsión Simple (Art. 168):", a: "Reclusión o prisión de 5 a 10 años", o: ["Reclusión o prisión de 5 a 10 años", "Reclusión o prisión de 3 a 8 años", "Reclusión o prisión de 4 a 12 años", "Reclusión o prisión de 1 a 6 años"] },
+        // UNIDAD V: LIBERTAD
+        { u: "V", q: "Privación ilegítima de la libertad (Art. 141):", a: "Prisión o reclusión de 6 meses a 3 años", o: ["Prisión o reclusión de 6 meses a 3 años", "Prisión o reclusión de 2 a 6 años", "Prisión o reclusión de 1 a 4 años", "Prisión o reclusión de 1 a 6 años"] },
+        // UNIDAD VI: PROPIEDAD
+        { u: "VI", q: "Hurto Simple (Art. 162):", a: "Prisión de un mes a dos años", o: ["Prisión de un mes a dos años", "Prisión de un mes a seis años", "Prisión de un año a seis años", "Prisión de dos a ocho años"] },
         { u: "VI", q: "Robo Simple (Art. 164):", a: "Prisión de un mes a seis años", o: ["Prisión de un mes a seis años", "Prisión de un mes a dos años", "Prisión de un año a seis años", "Prisión de dos a ocho años"] },
-        { u: "X", q: "Falsificación de Documento Público (Art. 292):", a: "Prisión de uno a seis años", o: ["Prisión de uno a seis años", "Prisión de dos a ocho años", "Prisión de uno a cinco años", "Prisión de tres a diez años"] },
-        { u: "XI", q: "Cohecho Financiero (Art. 312):", a: "Prisión de 1 a 6 años y multa de 2 a 5 veces", o: ["Prisión de 1 a 6 años y multa de 2 a 5 veces", "Prisión de 2 a 8 años y multa de 3 a 6 veces", "Prisión de 1 a 4 años y multa de 2 a 4 veces", "Prisión de 3 a 10 años y multa de 1
+        // UNIDAD IX: SEGURIDAD
+        { u: "IX", q: "Tenencia ilegítima de arma de guerra (Art. 189 bis):", a: "Prisión de dos a seis años", o: ["Prisión de dos a seis años", "Prisión de tres a ocho años", "Prisión de seis meses a dos años", "Prisión de uno a cuatro años"] },
+        // UNIDAD XIII: ADM. PÚBLICA
+        { u: "XIII", q: "Cohecho Pasivo (Art. 256):", a: "Reclusión o prisión de 1 a 6 años", o: ["Reclusión o prisión de 1 a 6 años", "Reclusión o prisión de 2 a 8 años", "Reclusión o prisión de 3 a 10 años", "Reclusión o prisión de 4 a 12 años"] },
+        // UNIDAD XI: ORDEN ECONÓMICO
+        { u: "XI", q: "Cohecho Financiero (Art. 312):", a: "Prisión de 1 a 6 años y multa de 2 a 5 veces", o: ["Prisión de 1 a 6 años y multa de 2 a 5 veces", "Prisión de 2 a 8 años y multa de 3 a 6 veces", "Prisión de 3 a 10 años y multa de 4 a 8 veces", "Prisión de 1 a 4 años y multa de 2 a 4 veces"] }
+    ];
+
+    let pUnidad = []; let cur = 0; let aciertos = 0;
+
+    function empezar(u) {
+        pUnidad = banco.filter(p => p.u === u).sort(() => Math.random() - 0.5);
+        if(pUnidad.length === 0) return alert("Cargando más preguntas para esta unidad...");
+        document.getElementById("section-menu").classList.add("hidden");
+        document.getElementById("section-quiz").classList.remove("hidden");
+        document.getElementById("quiz-title").innerText = "UNIDAD " + u;
+        cur = 0; aciertos = 0;
+        pintar();
+    }
+
+    function pintar() {
+        const d = pUnidad[cur];
+        document.getElementById("stats").innerText = `Pregunta ${cur + 1}/${pUnidad.length} | Aciertos: ${aciertos}`;
+        document.getElementById("q-text").innerText = d.q;
+        const b = document.getElementById("options-box");
+        b.innerHTML = "";
+        document.getElementById("btn-next").style.display = "none";
+        [...d.o].sort(() => Math.random() - 0.5).forEach(t => {
+            const btn = document.createElement("button");
+            btn.className = "opt"; btn.innerText = t;
+            btn.onclick = () => {
+                const btns = document.querySelectorAll(".opt");
+                btns.forEach(x => x.style.pointerEvents = "none");
+                if(t === d.a) { btn.classList.add("correct"); aciertos++; }
+                else { btn.classList.add("wrong"); btns.forEach(x => { if(x.innerText === d.a) x.classList.add("correct"); }); }
+                document.getElementById("btn-next").style.display = "block";
+            };
+            b.appendChild(btn);
+        });
+    }
+
+    function proxima() {
+        cur++;
+        if(cur < pUnidad.length) pintar();
+        else final();
+    }
+
+    function final() {
+        document.getElementById("section-quiz").classList.add("hidden");
+        document.getElementById("section-results").classList.remove("hidden");
+        const nota = (aciertos / pUnidad.length) * 10;
+        const gano = nota >= 7;
+        document.getElementById("nota-final").innerText = nota.toFixed(1);
+        document.getElementById("nota-final").style.color = gano ? "#28a745" : "#dc3545";
+        document.getElementById("mensaje-final").innerText = gano ? "¡APROBADO!" : "A REPASAR...";
+        document.getElementById("img-final").src = gano ? IMG_GANO : IMG_PERDO;
+    }
+</script>
+</body>
+</html>
