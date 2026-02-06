@@ -64,71 +64,25 @@
     const IMG_PERDO = "perdiste.jpg";
 
     const banco = [
-        // MÓDULO 1-2
+        // MÓDULO 1-2: VIDA Y LESIONES
         { u: "1-2", q: "Homicidio en Emoción Violenta (Art. 81, 1º, a):", a: "Reclusión de 3 a 6 años o prisión de 1 a 3 años", o: ["Reclusión de 3 a 6 años o prisión de 1 a 3 años", "Reclusión de 1 a 3 años o prisión de 3 a 6 años", "Reclusión de 2 a 5 años o prisión de 1 a 4 años", "Reclusión de 3 a 8 años o prisión de 2 a 5 años"] },
+        { u: "1-2", q: "Homicidio Preterintencional (Art. 81, 1º, b):", a: "Reclusión de 3 a 6 años o prisión de 1 a 3 años", o: ["Reclusión de 3 a 6 años o prisión de 1 a 3 años", "Reclusión de 1 a 3 años o prisión de 3 a 6 años", "Reclusión de 2 a 6 años o prisión de 1 a 4 años", "Reclusión de 3 a 8 años o prisión de 2 a 5 años"] },
+        { u: "1-2", q: "Homicidio Simple (Art. 79):", a: "Reclusión o prisión de ocho a veinticinco años", o: ["Reclusión o prisión de ocho a veinticinco años", "Reclusión o prisión de cinco a quince años", "Reclusión o prisión de tres a diez años", "Reclusión o prisión de seis a veinte años"] },
         { u: "1-2", q: "Lesiones Gravísimas (Art. 91):", a: "Reclusión o prisión de tres a diez años", o: ["Reclusión o prisión de tres a diez años", "Reclusión o prisión de uno a seis años", "Reclusión o prisión de cinco a quince años", "Reclusión o prisión de dos a ocho años"] },
-        // MÓDULO 3-4
+        { u: "1-2", q: "Homicidio Culposo básico (Art. 84):", a: "Prisión de uno a cinco años e inhabilitación", o: ["Prisión de uno a cinco años e inhabilitación", "Prisión de dos a seis años e inhabilitación", "Prisión de tres a ocho años e inhabilitación", "Prisión de uno a tres años e inhabilitación"] },
+
+        // MÓDULO 3-4: HONOR Y SEXUALIDAD
         { u: "3-4", q: "Calumnia (Art. 109):", a: "Multa de tres mil a treinta mil pesos", o: ["Multa de tres mil a treinta mil pesos", "Multa de mil a diez mil pesos", "Multa de cinco mil a cincuenta mil pesos", "Multa de mil quinientos a veinte mil pesos"] },
+        { u: "3-4", q: "Injuria (Art. 110):", a: "Multa de mil quinientos a veinte mil pesos", o: ["Multa de mil quinientos a veinte mil pesos", "Multa de tres mil a treinta mil pesos", "Multa de mil a diez mil pesos", "Multa de dos mil a veinticinco mil pesos"] },
         { u: "3-4", q: "Abuso Sexual Ultrajante (Art. 119, 2º p.):", a: "Reclusión o prisión de 4 a 10 años", o: ["Reclusión o prisión de 4 a 10 años", "Reclusión o prisión de 6 a 15 años", "Reclusión o prisión de 3 a 10 años", "Reclusión o prisión de 5 a 12 años"] },
-        // MÓDULO 5-6
+        { u: "3-4", q: "Abuso Sexual con Acceso Carnal (Art. 119, 3º p.):", a: "Reclusión o prisión de 6 a 15 años", o: ["Reclusión o prisión de 6 a 15 años", "Reclusión o prisión de 8 a 20 años", "Reclusión o prisión de 4 a 10 años", "Reclusión o prisión de 5 a 12 años"] },
+
+        // MÓDULO 5-6: LIBERTAD Y PROPIEDAD
         { u: "5-6", q: "Privación ilegítima de la libertad (Art. 141):", a: "Prisión o reclusión de seis meses a tres años", o: ["Prisión o reclusión de seis meses a tres años", "Prisión o reclusión de un mes a dos años", "Prisión o reclusión de uno a seis años", "Prisión o reclusión de dos a seis años"] },
         { u: "5-6", q: "Extorsión Simple (Art. 168):", a: "Reclusión o prisión de cinco a diez años", o: ["Reclusión o prisión de cinco a diez años", "Reclusión o prisión de tres a ocho años", "Reclusión o prisión de cuatro a doce años", "Reclusión o prisión de uno a seis años"] },
-        // MÓDULO 7-9
+        { u: "5-6", q: "Hurto Simple (Art. 162):", a: "Prisión de un mes a dos años", o: ["Prisión de un mes a dos años", "Prisión de un mes a seis años", "Prisión de un año a seis años", "Prisión de dos a ocho años"] },
+        { u: "5-6", q: "Robo Simple (Art. 164):", a: "Prisión de un mes a seis años", o: ["Prisión de un mes a seis años", "Prisión de un mes a dos años", "Prisión de un año a seis años", "Prisión de dos a ocho años"] },
+
+        // MÓDULO 7-9: SEGURIDAD PÚBLICA
         { u: "7-9", q: "Tenencia ilegítima de arma de guerra (Art. 189 bis):", a: "Prisión de dos a seis años", o: ["Prisión de dos a seis años", "Prisión de tres a ocho años", "Prisión de seis meses a dos años", "Prisión de uno a cuatro años"] },
-        // MÓDULO 10-12
-        { u: "10-12", q: "Falsificación de Documento Público (Art. 292):", a: "Prisión de uno a seis años", o: ["Prisión de uno a seis años", "Prisión de dos a ocho años", "Prisión de uno a cinco años", "Prisión de tres a diez años"] },
-        { u: "10-12", q: "Cohecho Pasivo (Art. 256):", a: "Reclusión o prisión de uno a seis años", o: ["Reclusión o prisión de uno a seis años", "Reclusión o prisión de dos a ocho años", "Reclusión o prisión de tres a diez años", "Reclusión o prisión de cuatro a doce años"] },
-        // MÓDULO 13-14
-        { u: "13-14", q: "Cohecho Financiero (Art. 312):", a: "Prisión de 1 a 6 años y multa de 2 a 5 veces", o: ["Prisión de 1 a 6 años y multa de 2 a 5 veces", "Prisión de 2 a 8 años y multa de 3 a 6 veces", "Prisión de 1 a 4 años y multa de 1 a 3 veces", "Prisión de 3 a 10 años y multa de 4 a 8 veces"] }
-    ];
-
-    let pUnidad = []; let cur = 0; let aciertos = 0;
-
-    function empezar(m) {
-        pUnidad = banco.filter(p => p.u === m).sort(() => Math.random() - 0.5);
-        document.getElementById("section-menu").classList.add("hidden");
-        document.getElementById("section-quiz").classList.remove("hidden");
-        cur = 0; aciertos = 0;
-        pintar();
-    }
-
-    function pintar() {
-        const d = pUnidad[cur];
-        document.getElementById("stats").innerText = `Pregunta ${cur + 1}/${pUnidad.length} | Aciertos: ${aciertos}`;
-        document.getElementById("q-text").innerText = d.q;
-        const b = document.getElementById("options-box");
-        b.innerHTML = "";
-        document.getElementById("btn-next").style.display = "none";
-        [...d.o].sort(() => Math.random() - 0.5).forEach(t => {
-            const btn = document.createElement("button");
-            btn.className = "opt"; btn.innerText = t;
-            btn.onclick = () => {
-                const btns = document.querySelectorAll(".opt");
-                btns.forEach(x => x.style.pointerEvents = "none");
-                if(t === d.a) { btn.classList.add("correct"); aciertos++; }
-                else { btn.classList.add("wrong"); btns.forEach(x => { if(x.innerText === d.a) x.classList.add("correct"); }); }
-                document.getElementById("btn-next").style.display = "block";
-            };
-            b.appendChild(btn);
-        });
-    }
-
-    function proxima() {
-        cur++;
-        if(cur < pUnidad.length) pintar();
-        else final();
-    }
-
-    function final() {
-        document.getElementById("section-quiz").classList.add("hidden");
-        document.getElementById("section-results").classList.remove("hidden");
-        const nota = (aciertos / pUnidad.length) * 10;
-        const gano = nota >= 7;
-        document.getElementById("nota-final").innerText = nota.toFixed(1);
-        document.getElementById("nota-final").style.color = gano ? "#28a745" : "#dc3545";
-        document.getElementById("mensaje-final").innerText = gano ? "¡APROBADO!" : "A REPASAR...";
-        document.getElementById("img-final").src = gano ? IMG_GANO : IMG_PERDO;
-    }
-</script>
-</body>
-</html>
+        { u: "7-9",
