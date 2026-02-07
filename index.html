@@ -17,9 +17,9 @@
         .correct { background: #d4edda !important; border: 2px solid #28a745 !important; font-weight: bold; }
         .wrong { background: #f8d7da !important; border: 2px solid #dc3545 !important; }
         .btn-next { display: none; width: 100%; padding: 15px; background: var(--legal); color: white; border: none; font-weight: bold; cursor: pointer; margin-top: 15px; }
+        .hidden { display: none; }
         .result-screen { text-align: center; }
         .res-img { max-width: 100%; height: auto; margin-top: 20px; border: 4px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-        .hidden { display: none; }
     </style>
 </head>
 <body>
@@ -28,14 +28,14 @@
     <div id="section-menu">
         <div class="header">
             <h2>MESA DE EXAMEN PENAL</h2>
-            <p>Seleccione un módulo (10 preguntas por unidad)</p>
+            <p>Seleccione un módulo para rendir</p>
         </div>
         <div class="menu-grid">
-            <button class="btn-unit" onclick="empezar('1-2')">U1-U2: VIDA / LESIONES</button>
-            <button class="btn-unit" onclick="empezar('3-4')">U3-U4: HONOR / SEXUAL</button>
-            <button class="btn-unit" onclick="empezar('5-6')">U5-U6: LIBERTAD / PROP</button>
+            <button class="btn-unit" onclick="empezar('1-2')">U1-U2: VIDA Y LESIONES</button>
+            <button class="btn-unit" onclick="empezar('3-4')">U3-U4: HONOR Y SEXUAL</button>
+            <button class="btn-unit" onclick="empezar('5-6')">U5-U6: LIBERTAD Y PROP</button>
             <button class="btn-unit" onclick="empezar('7-9')">U7-U9: SEGURIDAD PUB</button>
-            <button class="btn-unit" onclick="empezar('10-12')">U10-U12: FE / ADM PUB</button>
+            <button class="btn-unit" onclick="empezar('10-12')">U10-U12: FE Y ADM PUB</button>
             <button class="btn-unit" onclick="empezar('13-14')">U13-U14: ECONÓMICO</button>
         </div>
     </div>
@@ -44,7 +44,7 @@
         <div class="header"><h2 id="quiz-title">EXAMEN</h2><p id="stats"></p></div>
         <div class="question" id="q-text"></div>
         <div id="options-box"></div>
-        <button class="btn-next" id="btn-next" onclick="proxima()">SIGUIENTE PREGUNTA</button>
+        <button class="btn-next" id="btn-next" onclick="proxima()">CONTINUAR</button>
     </div>
 
     <div id="section-results" class="hidden">
@@ -64,7 +64,78 @@
 
     const banco = {
         "1-2": [
-            {q: "Homicidio Simple (Art. 79):", a: "Reclusión o prisión de ocho a veinticinco años", o: ["Reclusión o prisión de ocho a veinticinco años", "Reclusión o prisión de cinco a quince años", "Reclusión o prisión de tres a diez años", "Reclusión o prisión de seis a veinte años"]},
-            {q: "Homicidio en Emoción Violenta (Art. 81, 1º, a):", a: "Reclusión de 3 a 6 años o prisión de 1 a 3 años", o: ["Reclusión de 3 a 6 años o prisión de 1 a 3 años", "Reclusión de 1 a 3 años o prisión de 3 a 6 años", "Reclusión de 2 a 5 años o prisión de 1 a 4 años", "Reclusión de 3 a 8 años o prisión de 2 a 5 años"]},
-            {q: "Homicidio Preterintencional (Art. 81, 1º, b):", a: "Reclusión de 3 a 6 años o prisión de 1 a 3 años", o: ["Reclusión de 3 a 6 años o prisión de 1 a 3 años", "Reclusión de 1 a 3 años o prisión de 3 a 6 años", "Reclusión de 2 a 6 años o prisión de 1 a 4 años", "Reclusión de 3 a 8 años o prisión de 2 a 5 años"]},
-            {q: "Homicidio
+            {q: "Homicidio Simple (Art. 79):", a: "8 a 25 años de reclusión o prisión", o: ["8 a 25 años de reclusión o prisión", "5 a 15 años de reclusión o prisión", "3 a 10 años de reclusión o prisión", "1 a 6 años de reclusión o prisión"]},
+            {q: "Emoción Violenta (Art. 81, 1º, a):", a: "Reclusión de 3 a 6 años o prisión de 1 a 3 años", o: ["Reclusión de 3 a 6 años o prisión de 1 a 3 años", "Reclusión de 1 a 3 años o prisión de 3 a 6 años", "Reclusión de 2 a 5 años o prisión de 1 a 4 años", "Reclusión de 3 a 8 años o prisión de 2 a 5 años"]},
+            {q: "Homicidio Culposo (Art. 84):", a: "Prisión de uno a cinco años e inhabilitación", o: ["Prisión de uno a cinco años e inhabilitación", "Prisión de dos a seis años e inhabilitación", "Prisión de tres a ocho años e inhabilitación", "Prisión de uno a tres años e inhabilitación"]},
+            {q: "Lesiones Gravísimas (Art. 91):", a: "Reclusión o prisión de tres a diez años", o: ["Reclusión o prisión de tres a diez años", "Reclusión o prisión de uno a seis años", "Reclusión o prisión de cinco a quince años", "Reclusión o prisión de dos a ocho años"]}
+        ],
+        "3-4": [
+            {q: "Calumnia (Art. 109):", a: "Multa de tres mil a treinta mil pesos", o: ["Multa de tres mil a treinta mil pesos", "Multa de mil a diez mil pesos", "Multa de cinco mil a cincuenta mil pesos", "Multa de mil quinientos a veinte mil pesos"]},
+            {q: "Abuso Sexual con Acceso Carnal (Art. 119):", a: "Reclusión o prisión de seis a quince años", o: ["Reclusión o prisión de seis a quince años", "Reclusión o prisión de ocho a veinte años", "Reclusión o prisión de cuatro a diez años", "Reclusión o prisión de cinco a doce años"]}
+        ],
+        "5-6": [
+            {q: "Hurto Simple (Art. 162):", a: "Prisión de un mes a dos años", o: ["Prisión de un mes a dos años", "Prisión de un mes a seis años", "Prisión de un año a seis años", "Prisión de dos a ocho años"]},
+            {q: "Robo Simple (Art. 164):", a: "Prisión de un mes a seis años", o: ["Prisión de un mes a seis años", "Prisión de un mes a dos años", "Prisión de un año a seis años", "Prisión de dos a ocho años"]},
+            {q: "Extorsión (Art. 168):", a: "Reclusión o prisión de cinco a diez años", o: ["Reclusión o prisión de cinco a diez años", "Reclusión o prisión de tres a ocho años", "Reclusión o prisión de cuatro a doce años", "Reclusión o prisión de uno a seis años"]}
+        ],
+        "13-14": [
+            {q: "Cohecho Financiero (Art. 312):", a: "Prisión de 1 a 6 años y multa de 2 a 5 veces", o: ["Prisión de 1 a 6 años y multa de 2 a 5 veces", "Prisión de 2 a 8 años y multa de 3 a 6 veces", "Prisión de 1 a 4 años y multa de 1 a 3 veces", "Prisión de 3 a 10 años y multa de 4 a 8 veces"]},
+            {q: "Lavado Activos (Art. 303):", a: "Prisión de tres a diez años y multa de 2 a 10 veces", o: ["Prisión de tres a diez años y multa de 2 a 10 veces", "Prisión de dos a ocho años y multa de 3 a 5 veces", "Prisión de cinco a quince años y multa de 1 a 5 veces", "Prisión de uno a seis años y multa de 2 a 8 veces"]}
+        ]
+    };
+
+    let pUnidad = []; 
+    let actual = 0; 
+    let puntos = 0;
+
+    function empezar(m) {
+        pUnidad = [...banco[m]].sort(() => Math.random() - 0.5);
+        document.getElementById("section-menu").classList.add("hidden");
+        document.getElementById("section-quiz").classList.remove("hidden");
+        document.getElementById("quiz-title").innerText = "MÓDULO " + m;
+        actual = 0; puntos = 0;
+        pintar();
+    }
+
+    function pintar() {
+        if (actual >= pUnidad.length) return final();
+        const d = pUnidad[actual];
+        document.getElementById("stats").innerText = `Pregunta ${actual + 1}/${pUnidad.length} | Aciertos: ${puntos}`;
+        document.getElementById("q-text").innerText = d.q;
+        const box = document.getElementById("options-box");
+        box.innerHTML = "";
+        document.getElementById("btn-next").style.display = "none";
+        
+        d.o.sort(() => Math.random() - 0.5).forEach(t => {
+            const btn = document.createElement("button");
+            btn.className = "opt"; 
+            btn.innerText = t;
+            btn.onclick = function() {
+                const btns = document.querySelectorAll(".opt");
+                btns.forEach(x => x.style.pointerEvents = "none");
+                if(t === d.a) { this.classList.add("correct"); puntos++; }
+                else { this.classList.add("wrong"); btns.forEach(x => { if(x.innerText === d.a) x.classList.add("correct"); }); }
+                document.getElementById("btn-next").style.display = "block";
+            };
+            box.appendChild(btn);
+        });
+    }
+
+    function proxima() {
+        actual++;
+        pintar();
+    }
+
+    function final() {
+        document.getElementById("section-quiz").classList.add("hidden");
+        document.getElementById("section-results").classList.remove("hidden");
+        const nota = (puntos / pUnidad.length) * 10;
+        const gano = nota >= 7;
+        document.getElementById("nota-final").innerText = nota.toFixed(1);
+        document.getElementById("nota-final").style.color = gano ? "#28a745" : "#dc3545";
+        document.getElementById("mensaje-final").innerText = gano ? "¡APROBADO!" : "A REPASAR...";
+        document.getElementById("img-final").src = gano ? IMG_GANO : IMG_PERDO;
+    }
+</script>
+</body>
+</html>
