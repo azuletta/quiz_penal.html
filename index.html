@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulador Penal Especial - Programa Completo</title>
+    <title>Examen Final Penal Especial - 5to Año</title>
     <style>
         :root { --legal: #1a252f; --gold: #c5a059; --bg: #f4f7f6; }
         body { font-family: 'Times New Roman', serif; background: var(--bg); display: flex; justify-content: center; padding: 20px; margin: 0; }
@@ -29,7 +29,7 @@
     <div id="section-menu">
         <div class="header">
             <h2>MESA DE EXAMEN PENAL</h2>
-            <p>Seleccione el módulo del programa (Unidades 1-14)</p>
+            <p>Seleccione el módulo del programa (10 preguntas por bloque)</p>
         </div>
         <div class="menu-grid">
             <button class="btn-unit" onclick="empezar('1-2')">U1 y U2: VIDA Y LESIONES</button>
@@ -63,26 +63,21 @@
     const IMG_GANO = "ganaste.jpg"; 
     const IMG_PERDO = "perdiste.jpg";
 
-    const banco = [
-        // MÓDULO 1-2: VIDA Y LESIONES
-        { u: "1-2", q: "Homicidio en Emoción Violenta (Art. 81, 1º, a):", a: "Reclusión de 3 a 6 años o prisión de 1 a 3 años", o: ["Reclusión de 3 a 6 años o prisión de 1 a 3 años", "Reclusión de 1 a 3 años o prisión de 3 a 6 años", "Reclusión de 2 a 5 años o prisión de 1 a 4 años", "Reclusión de 3 a 8 años o prisión de 2 a 5 años"] },
-        { u: "1-2", q: "Homicidio Preterintencional (Art. 81, 1º, b):", a: "Reclusión de 3 a 6 años o prisión de 1 a 3 años", o: ["Reclusión de 3 a 6 años o prisión de 1 a 3 años", "Reclusión de 1 a 3 años o prisión de 3 a 6 años", "Reclusión de 2 a 6 años o prisión de 1 a 4 años", "Reclusión de 3 a 8 años o prisión de 2 a 5 años"] },
-        { u: "1-2", q: "Homicidio Simple (Art. 79):", a: "Reclusión o prisión de ocho a veinticinco años", o: ["Reclusión o prisión de ocho a veinticinco años", "Reclusión o prisión de cinco a quince años", "Reclusión o prisión de tres a diez años", "Reclusión o prisión de seis a veinte años"] },
-        { u: "1-2", q: "Lesiones Gravísimas (Art. 91):", a: "Reclusión o prisión de tres a diez años", o: ["Reclusión o prisión de tres a diez años", "Reclusión o prisión de uno a seis años", "Reclusión o prisión de cinco a quince años", "Reclusión o prisión de dos a ocho años"] },
-        { u: "1-2", q: "Homicidio Culposo básico (Art. 84):", a: "Prisión de uno a cinco años e inhabilitación", o: ["Prisión de uno a cinco años e inhabilitación", "Prisión de dos a seis años e inhabilitación", "Prisión de tres a ocho años e inhabilitación", "Prisión de uno a tres años e inhabilitación"] },
-
-        // MÓDULO 3-4: HONOR Y SEXUALIDAD
-        { u: "3-4", q: "Calumnia (Art. 109):", a: "Multa de tres mil a treinta mil pesos", o: ["Multa de tres mil a treinta mil pesos", "Multa de mil a diez mil pesos", "Multa de cinco mil a cincuenta mil pesos", "Multa de mil quinientos a veinte mil pesos"] },
-        { u: "3-4", q: "Injuria (Art. 110):", a: "Multa de mil quinientos a veinte mil pesos", o: ["Multa de mil quinientos a veinte mil pesos", "Multa de tres mil a treinta mil pesos", "Multa de mil a diez mil pesos", "Multa de dos mil a veinticinco mil pesos"] },
-        { u: "3-4", q: "Abuso Sexual Ultrajante (Art. 119, 2º p.):", a: "Reclusión o prisión de 4 a 10 años", o: ["Reclusión o prisión de 4 a 10 años", "Reclusión o prisión de 6 a 15 años", "Reclusión o prisión de 3 a 10 años", "Reclusión o prisión de 5 a 12 años"] },
-        { u: "3-4", q: "Abuso Sexual con Acceso Carnal (Art. 119, 3º p.):", a: "Reclusión o prisión de 6 a 15 años", o: ["Reclusión o prisión de 6 a 15 años", "Reclusión o prisión de 8 a 20 años", "Reclusión o prisión de 4 a 10 años", "Reclusión o prisión de 5 a 12 años"] },
-
-        // MÓDULO 5-6: LIBERTAD Y PROPIEDAD
-        { u: "5-6", q: "Privación ilegítima de la libertad (Art. 141):", a: "Prisión o reclusión de seis meses a tres años", o: ["Prisión o reclusión de seis meses a tres años", "Prisión o reclusión de un mes a dos años", "Prisión o reclusión de uno a seis años", "Prisión o reclusión de dos a seis años"] },
-        { u: "5-6", q: "Extorsión Simple (Art. 168):", a: "Reclusión o prisión de cinco a diez años", o: ["Reclusión o prisión de cinco a diez años", "Reclusión o prisión de tres a ocho años", "Reclusión o prisión de cuatro a doce años", "Reclusión o prisión de uno a seis años"] },
-        { u: "5-6", q: "Hurto Simple (Art. 162):", a: "Prisión de un mes a dos años", o: ["Prisión de un mes a dos años", "Prisión de un mes a seis años", "Prisión de un año a seis años", "Prisión de dos a ocho años"] },
-        { u: "5-6", q: "Robo Simple (Art. 164):", a: "Prisión de un mes a seis años", o: ["Prisión de un mes a seis años", "Prisión de un mes a dos años", "Prisión de un año a seis años", "Prisión de dos a ocho años"] },
-
-        // MÓDULO 7-9: SEGURIDAD PÚBLICA
-        { u: "7-9", q: "Tenencia ilegítima de arma de guerra (Art. 189 bis):", a: "Prisión de dos a seis años", o: ["Prisión de dos a seis años", "Prisión de tres a ocho años", "Prisión de seis meses a dos años", "Prisión de uno a cuatro años"] },
-        { u: "7-9",
+    const banco = {
+        "1-2": [
+            {q: "Homicidio Simple (Art. 79):", a: "Reclusión o prisión de ocho a veinticinco años", o: ["Reclusión o prisión de ocho a veinticinco años", "Reclusión o prisión de cinco a quince años", "Reclusión o prisión de tres a diez años", "Reclusión o prisión de seis a veinte años"]},
+            {q: "Homicidio en Emoción Violenta (Art. 81, 1º, a):", a: "Reclusión de 3 a 6 años o prisión de 1 a 3 años", o: ["Reclusión de 3 a 6 años o prisión de 1 a 3 años", "Reclusión de 1 a 3 años o prisión de 3 a 6 años", "Reclusión de 2 a 5 años o prisión de 1 a 4 años", "Reclusión de 3 a 8 años o prisión de 2 a 5 años"]},
+            {q: "Homicidio Preterintencional (Art. 81, 1º, b):", a: "Reclusión de 3 a 6 años o prisión de 1 a 3 años", o: ["Reclusión de 3 a 6 años o prisión de 1 a 3 años", "Reclusión de 1 a 3 años o prisión de 3 a 6 años", "Reclusión de 2 a 6 años o prisión de 1 a 4 años", "Reclusión de 3 a 8 años o prisión de 2 a 5 años"]},
+            {q: "Homicidio Culposo básico (Art. 84):", a: "Prisión de uno a cinco años e inhabilitación", o: ["Prisión de uno a cinco años e inhabilitación", "Prisión de dos a seis años e inhabilitación", "Prisión de tres a ocho años e inhabilitación", "Prisión de uno a tres años e inhabilitación"]},
+            {q: "Lesiones Graves (Art. 90):", a: "Reclusión o prisión de uno a seis años", o: ["Reclusión o prisión de uno a seis años", "Reclusión o prisión de tres a diez años", "Reclusión o prisión de dos a ocho años", "Reclusión o prisión de seis meses a dos años"]},
+            {q: "Lesiones Gravísimas (Art. 91):", a: "Reclusión o prisión de tres a diez años", o: ["Reclusión o prisión de tres a diez años", "Reclusión o prisión de uno a seis años", "Reclusión o prisión de cinco a quince años", "Reclusión o prisión de dos a ocho años"]},
+            {q: "Homicidio Calificado (Art. 80):", a: "Reclusión o prisión perpetua", o: ["Reclusión o prisión perpetua", "Reclusión o prisión de quince a treinta años", "Reclusión o prisión de veinte a veinticinco", "Reclusión o prisión de diez a quince años"]},
+            {q: "Homicidio Culposo Agravado (Art. 84 bis):", a: "Prisión de tres a seis años e inhabilitación", o: ["Prisión de tres a seis años e inhabilitación", "Prisión de dos a cinco años e inhabilitación", "Prisión de cuatro a ocho años e inhabilitación", "Prisión de uno a cuatro años e inhabilitación"]},
+            {q: "Instigación al Suicidio (Art. 83):", a: "Prisión de uno a cuatro años", o: ["Prisión de uno a cuatro años", "Prisión de dos a seis años", "Prisión de tres a ocho años", "Prisión de seis meses a tres años"]},
+            {q: "Abuso de Armas (Art. 104):", a: "Prisión de uno a tres años", o: ["Prisión de uno a tres años", "Prisión de seis meses a dos años", "Prisión de un mes a un año", "Prisión de dos a seis años"]}
+        ],
+        "3-4": [
+            {q: "Calumnia (Art. 109):", a: "Multa de tres mil a treinta mil pesos", o: ["Multa de tres mil a treinta mil pesos", "Multa de mil a diez mil pesos", "Multa de cinco mil a cincuenta mil pesos", "Multa de mil quinientos a veinte mil pesos"]},
+            {q: "Injuria (Art. 110):", a: "Multa de mil quinientos a veinte mil pesos", o: ["Multa de mil quinientos a veinte mil pesos", "Multa de tres mil a treinta mil pesos", "Multa de mil a diez mil pesos", "Multa de dos mil a veinticinco mil pesos"]},
+            {q: "Abuso Sexual Simple (Art. 119, 1er p.):", a: "Reclusión o prisión de seis meses a cuatro años", o: ["Reclusión o prisión de seis meses a cuatro años", "Reclusión o prisión de un mes a tres años", "Reclusión o prisión de un año a seis años", "Reclusión o prisión de dos a seis años"]},
+            {q
