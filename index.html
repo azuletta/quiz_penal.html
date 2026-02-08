@@ -1,61 +1,134 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Examen Penal 5to</title>
+    <title>Simulador Penal Especial - Programa Completo</title>
     <style>
-        body { font-family: sans-serif; background: #eee; padding: 20px; text-align: center; }
-        .box { background: white; padding: 20px; border-radius: 10px; max-width: 500px; margin: auto; border: 2px solid #333; }
-        .btn { display: block; width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #000; background: #fff; cursor: pointer; font-size: 16px; }
-        .btn:hover { background: #f0f0f0; }
+        body { font-family: 'Times New Roman', serif; background: #eef2f3; padding: 15px; text-align: center; color: #1a252f; }
+        .box { background: white; padding: 25px; border: 1px solid #000; max-width: 600px; margin: auto; box-shadow: 8px 8px 0px #1a252f; }
+        .header { border-bottom: 2px solid #000; margin-bottom: 20px; padding-bottom: 10px; }
+        .btn { display: block; width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #333; background: #fff; cursor: pointer; font-size: 16px; font-weight: bold; font-family: inherit; }
+        .btn:hover { background: #1a252f; color: white; }
         .hidden { display: none; }
-        .correct { background: #d4edda !important; }
-        .wrong { background: #f8d7da !important; }
-        img { max-width: 100%; margin-top: 20px; border-radius: 5px; }
+        .correct { background: #d4edda !important; color: #155724; border: 2px solid #28a745 !important; }
+        .wrong { background: #f8d7da !important; color: #721c24; border: 2px solid #dc3545 !important; }
+        img { max-width: 100%; margin-top: 20px; border: 5px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
     </style>
 </head>
 <body>
 
 <div class="box" id="menu">
-    <h2>MESA DE EXAMEN</h2>
-    <p>Elegí un módulo:</p>
-    <button class="btn" onclick="start('1-2')">U1-U2: VIDA Y LESIONES</button>
-    <button class="btn" onclick="start('5-6')">U5-U6: LIBERTAD Y PROP</button>
+    <div class="header">
+        <h1>PENAL ESPECIAL</h1>
+        <p>Elegí el módulo para examinar (U1-U14)</p>
+    </div>
+    <button class="btn" onclick="start('1-2')">Unidades 1 y 2 (Vida/Lesiones)</button>
+    <button class="btn" onclick="start('3-4')">Unidades 3 y 4 (Honor/Sexual)</button>
+    <button class="btn" onclick="start('5-6')">Unidades 5 y 6 (Libertad/Propiedad)</button>
+    <button class="btn" onclick="start('7-9')">Unidades 7 a 9 (Seguridad Pública)</button>
+    <button class="btn" onclick="start('10-12')">Unidades 10 a 12 (Fe/Adm Pública)</button>
+    <button class="btn" onclick="start('13-14')">Unidades 13 y 14 (Orden Económico)</button>
 </div>
 
 <div class="box hidden" id="quiz">
     <h3 id="q-text"></h3>
     <div id="opts"></div>
-    <button id="next" class="btn hidden" onclick="goNext()" style="background:#000; color:#fff;">SIGUIENTE</button>
+    <button id="next" class="btn hidden" onclick="goNext()" style="background:#000; color:#fff;">SIGUIENTE PREGUNTA</button>
 </div>
 
 <div class="box hidden" id="res">
     <h1 id="nota"></h1>
+    <h3 id="msg"></h3>
     <img id="img-res" src="" onerror="this.style.display='none'">
-    <button class="btn" onclick="location.reload()">VOLVER</button>
+    <br><br>
+    <button class="btn" onclick="location.reload()">VOLVER AL INICIO</button>
 </div>
 
 <script>
     const banco = {
         "1-2": [
-            {q: "Homicidio Simple (Art. 79):", a: "8 a 25 años", o: ["8 a 25 años", "5 a 15 años", "3 a 10 años", "1 a 6 años"]},
-            {q: "Emoción Violenta (Art. 81):", a: "Rec. 3-6 o Pris. 1-3", o: ["Rec. 3-6 o Pris. 1-3", "Rec. 1-3 o Pris. 3-6", "Pris. 2-5 años", "Rec. 3-8 años"]}
+            {q: "Homicidio Simple (Art. 79):", a: "8 a 25 años de prisión o reclusión", o: ["8 a 25 años de prisión o reclusión", "5 a 15 años de prisión o reclusión", "1 a 6 años de prisión o reclusión", "3 a 10 años de prisión o reclusión"]},
+            {q: "Emoción Violenta (Art. 81, 1a):", a: "Rec. 3 a 6 o Pris. 1 a 3 años", o: ["Rec. 3 a 6 o Pris. 1 a 3 años", "Pris. 3 a 6 o Rec. 1 a 3 años", "Rec. 2 a 5 o Pris. 1 a 4 años", "Pris. 1 a 5 o Rec. 3 a 8 años"]},
+            {q: "Homicidio Culposo básico (Art. 84):", a: "1 a 5 años e inhabilitación especial", o: ["1 a 5 años e inhabilitación especial", "2 a 6 años e inhabilitación especial", "1 a 3 años e inhabilitación especial", "3 a 6 años e inhabilitación especial"]},
+            {q: "Lesiones Gravísimas (Art. 91):", a: "Reclusión o prisión de 3 a 10 años", o: ["Reclusión o prisión de 3 a 10 años", "Reclusión o prisión de 1 a 6 años", "Reclusión o prisión de 5 a 15 años", "Reclusión o prisión de 2 a 8 años"]},
+            {q: "Lesiones Graves (Art. 90):", a: "Reclusión o prisión de 1 a 6 años", o: ["Reclusión o prisión de 1 a 6 años", "Reclusión o prisión de 1 a 3 años", "Reclusión o prisión de 2 a 5 años", "Reclusión o prisión de 3 a 8 años"]},
+            {q: "Abandono de persona básico (Art. 106):", a: "Prisión de dos a seis años", o: ["Prisión de dos a seis años", "Prisión de uno a cuatro años", "Prisión de tres a diez años", "Prisión de seis meses a tres años"]},
+            {q: "Instigación al suicidio (Art. 83):", a: "Prisión de uno a cuatro años", o: ["Prisión de uno a cuatro años", "Prisión de uno a seis años", "Prisión de dos a cinco años", "Prisión de tres a ocho años"]},
+            {q: "Homicidio Preterintencional (Art. 81, 1b):", a: "Rec. 3 a 6 o Pris. 1 a 3 años", o: ["Rec. 3 a 6 o Pris. 1 a 3 años", "Rec. 1 a 5 o Pris. 2 a 6 años", "Pris. 1 a 6 años únicamente", "Rec. de 10 a 25 años"]},
+            {q: "Duelo con muerte (Art. 97):", a: "Prisión de uno a cuatro años", o: ["Prisión de uno a cuatro años", "Prisión de dos a seis años", "Prisión de seis meses a tres años", "Prisión de tres a ocho años"]},
+            {q: "Homicidio Calificado (Art. 80):", a: "Reclusión o prisión perpetua", o: ["Reclusión o prisión perpetua", "Pena máxima de 25 años", "Pena de 15 a 30 años", "Pena de 20 a 35 años"]}
+        ],
+        "3-4": [
+            {q: "Calumnia (Art. 109):", a: "Multa de $3.000 a $30.000", o: ["Multa de $3.000 a $30.000", "Multa de $1.000 a $10.000", "Multa de $5.000 a $50.000", "Multa de $1.500 a $20.000"]},
+            {q: "Injuria (Art. 110):", a: "Multa de $1.500 a $20.000", o: ["Multa de $1.500 a $20.000", "Multa de $3.000 a $30.000", "Multa de $1.000 a $15.000", "Multa de $5.000 a $25.000"]},
+            {q: "Abuso Sexual con acceso carnal (Art. 119):", a: "Rec. o Pris. de 6 a 15 años", o: ["Rec. o Pris. de 6 a 15 años", "Rec. o Pris. de 8 a 20 años", "Rec. o Pris. de 4 a 10 años", "Rec. o Pris. de 5 a 12 años"]},
+            {q: "Abuso Sexual Ultrajante (Art. 119, 2p):", a: "Rec. o Pris. de 4 a 10 años", o: ["Rec. o Pris. de 4 a 10 años", "Rec. o Pris. de 6 a 12 años", "Rec. o Pris. de 3 a 8 años", "Rec. o Pris. de 5 a 15 años"]},
+            {q: "Grooming (Art. 131):", a: "Prisión de seis meses a cuatro años", o: ["Prisión de seis meses a cuatro años", "Prisión de un año a cinco años", "Prisión de dos a seis años", "Prisión de un mes a un año"]},
+            {q: "Promoción de la prostitución (Art. 125):", a: "Prisión de cuatro a diez años", o: ["Prisión de cuatro a diez años", "Prisión de tres a seis años", "Prisión de cinco a quince años", "Prisión de dos a ocho años"]},
+            {q: "Difusión de imágenes (Art. 128):", a: "Prisión de seis meses a tres años", o: ["Prisión de seis meses a tres años", "Prisión de un mes a un año", "Prisión de un año a seis años", "Prisión de dos a ocho años"]},
+            {q: "Abuso Sexual Simple (Art. 119, 1p):", a: "Prisión de seis meses a cuatro años", o: ["Prisión de seis meses a cuatro años", "Prisión de un mes a dos años", "Prisión de seis meses a tres años", "Prisión de un año a seis años"]},
+            {q: "Rapto (Art. 130):", a: "Prisión de uno a cuatro años", o: ["Prisión de uno a cuatro años", "Prisión de dos a seis años", "Prisión de seis meses a tres años", "Prisión de tres a ocho años"]},
+            {q: "Impedimiento de contacto (Ley 24.270):", a: "Prisión de un mes a un año", o: ["Prisión de un mes a un año", "Prisión de seis meses a tres años", "Multa de $10.000 únicamente", "Inhabilitación especial"]}
         ],
         "5-6": [
-            {q: "Hurto Simple (Art. 162):", a: "1 mes a 2 años", o: ["1 mes a 2 años", "1 mes a 6 años", "1 a 6 años", "2 a 8 años"]},
-            {q: "Robo Simple (Art. 164):", a: "1 mes a 6 años", o: ["1 mes a 6 años", "1 mes a 2 años", "1 a 6 años", "2 a 8 años"]}
+            {q: "Hurto Simple (Art. 162):", a: "Prisión de un mes a dos años", o: ["Prisión de un mes a dos años", "Prisión de un mes a seis años", "Prisión de seis meses a tres años", "Prisión de uno a seis años"]},
+            {q: "Robo Simple (Art. 164):", a: "Prisión de un mes a seis años", o: ["Prisión de un mes a seis años", "Prisión de un mes a dos años", "Prisión de uno a seis años", "Prisión de dos a ocho años"]},
+            {q: "Extorsión Simple (Art. 168):", a: "Rec. o Pris. de 5 a 10 años", o: ["Rec. o Pris. de 5 a 10 años", "Rec. o Pris. de 3 a 8 años", "Rec. o Pris. de 4 a 12 años", "Rec. o Pris. de 8 a 20 años"]},
+            {q: "Privación ilegítima (Art. 141):", a: "Pris. o Rec. de 6 meses a 3 años", o: ["Pris. o Rec. de 6 meses a 3 años", "Pris. o Rec. de 1 mes a 2 años", "Pris. o Rec. de 2 a 6 años", "Pris. o Rec. de 1 a 4 años"]},
+            {q: "Estafa Genérica (Art. 172):", a: "Prisión de un mes a seis años", o: ["Prisión de un mes a seis años", "Prisión de un año a seis años", "Prisión de seis meses a cuatro años", "Prisión de un mes a un año"]},
+            {q: "Usurpación (Art. 181):", a: "Prisión de seis meses a tres años", o: ["Prisión de seis meses a tres años", "Prisión de un mes a un año", "Prisión de un año a seis años", "Prisión de dos a seis años"]},
+            {q: "Daño Simple (Art. 183):", a: "Prisión de quince días a un año", o: ["Prisión de quince días a un año", "Prisión de un mes a un año", "Prisión de un mes a seis meses", "Prisión de dos meses a dos años"]},
+            {q: "Retención indebida (Art. 173 inc. 2):", a: "Prisión de un mes a seis años", o: ["Prisión de un mes a seis años", "Prisión de un mes a dos años", "Prisión de seis meses a tres años", "Prisión de un año a seis años"]},
+            {q: "Abigeato Simple (Art. 167 ter):", a: "Prisión de dos a seis años", o: ["Prisión de dos a seis años", "Prisión de uno a cuatro años", "Prisión de tres a ocho años", "Prisión de seis meses a dos años"]},
+            {q: "Robo con armas (Art. 166 inc. 2):", a: "Rec. o Pris. de 5 a 15 años", o: ["Rec. o Pris. de 5 a 15 años", "Rec. o Pris. de 3 a 10 años", "Rec. o Pris. de 8 a 20 años", "Rec. o Pris. de 4 a 12 años"]}
+        ],
+        "7-9": [
+            {q: "Arma de guerra (Art. 189 bis):", a: "Prisión de dos a seis años", o: ["Prisión de dos a seis años", "Prisión de tres a ocho años", "Prisión de un año a cuatro años", "Prisión de seis meses a dos años"]},
+            {q: "Arma civil (Art. 189 bis):", a: "Prisión de un año a cuatro años", o: ["Prisión de un año a cuatro años", "Prisión de dos a seis años", "Prisión de seis meses a tres años", "Prisión de un año a cinco años"]},
+            {q: "Incendio (Art. 186):", a: "Rec. o Pris. de 3 a 10 años", o: ["Rec. o Pris. de 3 a 10 años", "Rec. o Pris. de 2 a 8 años", "Rec. o Pris. de 5 a 15 años", "Rec. o Pris. de 1 a 6 años"]},
+            {q: "Envenenamiento aguas (Art. 200):", a: "Rec. o Pris. de 3 a 10 años", o: ["Rec. o Pris. de 3 a 10 años", "Rec. o Pris. de 2 a 8 años", "Rec. o Pris. de 1 a 6 años", "Rec. o Pris. de 5 a 15 años"]},
+            {q: "Propagación enfermedad (Art. 202):", a: "Rec. o Pris. de 3 a 15 años", o: ["Rec. o Pris. de 3 a 15 años", "Rec. o Pris. de 2 a 8 años", "Rec. o Pris. de 5 a 10 años", "Rec. o Pris. de 1 a 6 años"]},
+            {q: "Tenencia arma civil (Art. 189 bis):", a: "Prisión de seis meses a dos años", o: ["Prisión de seis meses a dos años", "Prisión de un año a tres años", "Prisión de un mes a un año", "Prisión de dos meses a dos años"]},
+            {q: "Interrupción transporte (Art. 190):", a: "Prisión de dos a ocho años", o: ["Prisión de dos a ocho años", "Prisión de uno a seis años", "Prisión de tres a diez años", "Prisión de cinco a quince años"]},
+            {q: "Asociación ilícita (Art. 210):", a: "Prisión de tres a diez años", o: ["Prisión de tres a diez años", "Prisión de dos a seis años", "Prisión de cinco a quince años", "Prisión de un año a cuatro años"]},
+            {q: "Evasión tributaria (Ley 24.769):", a: "Prisión de dos a seis años", o: ["Prisión de dos a seis años", "Prisión de tres a nueve años", "Prisión de un mes a dos años", "Prisión de cinco a diez años"]},
+            {q: "Mercaderías peligrosas (Art. 201):", a: "Rec. o Pris. de 3 a 10 años", o: ["Rec. o Pris. de 3 a 10 años", "Rec. o Pris. de 2 a 8 años", "Rec. o Pris. de 1 a 6 años", "Rec. o Pris. de 4 a 12 años"]}
+        ],
+        "10-12": [
+            {q: "Documento Público (Art. 292):", a: "Prisión de uno a seis años", o: ["Prisión de uno a seis años", "Prisión de dos a ocho años", "Prisión de uno a cinco años", "Prisión de tres a diez años"]},
+            {q: "Cohecho Pasivo (Art. 256):", a: "Rec. o Pris. de 1 a 6 años", o: ["Rec. o Pris. de 1 a 6 años", "Rec. o Pris. de 2 a 8 años", "Rec. o Pris. de 3 a 10 años", "Rec. o Pris. de 6 meses a 3 años"]},
+            {q: "Falsedad Ideológica (Art. 293):", a: "Prisión de uno a seis años", o: ["Prisión de uno a seis años", "Prisión de dos a ocho años", "Prisión de seis meses a tres años", "Prisión de uno a cinco años"]},
+            {q: "Enriquecimiento ilícito (Art. 268):", a: "Prisión de dos a seis años", o: ["Prisión de dos a seis años", "Prisión de uno a cuatro años", "Prisión de tres a diez años", "Prisión de cuatro a ocho años"]},
+            {q: "Prevaricato (Art. 269):", a: "Multa de $3.000 a $30.000", o: ["Multa de $3.000 a $30.000", "Multa de $1.000 a $10.000", "Multa de $5.000 a $50.000", "Multa de $2.000 a $20.000"]},
+            {q: "Malversación (Art. 260):", a: "Inhabilitación de 1 mes a 3 años", o: ["Inhabilitación de 1 mes a 3 años", "Inhabilitación de 6 meses a 2 años", "Inhabilitación perpetua", "Prisión de 1 mes a 6 meses"]},
+            {q: "Tráfico influencias (Art. 256 bis):", a: "Rec. o Pris. de 1 a 6 años", o: ["Rec. o Pris. de 1 a 6 años", "Rec. o Pris. de 2 a 8 años", "Rec. o Pris. de 3 a 10 años", "Rec. o Pris. de 6 meses a 3 años"]},
+            {q: "Falsificación moneda (Art. 282):", a: "Rec. o Pris. de 3 a 15 años", o: ["Rec. o Pris. de 3 a 15 años", "Rec. o Pris. de 1 a 6 años", "Rec. o Pris. de 5 a 20 años", "Rec. o Pris. de 2 a 8 años"]},
+            {q: "Abuso autoridad (Art. 248):", a: "Prisión de un mes a dos años", o: ["Prisión de un mes a dos años", "Prisión de seis meses a tres años", "Prisión de un año a cuatro años", "Prisión de 15 días a 1 año"]},
+            {q: "Usurpación títulos (Art. 247):", a: "Multa de $750 a $12.500", o: ["Multa de $750 a $12.500", "Multa de $1.500 a $25.000", "Multa de $3.000 a $30.000", "Prisión de un mes a un año"]}
+        ],
+        "13-14": [
+            {q: "Cohecho Financiero (Art. 312):", a: "Prisión de 1 a 6 años y multa", o: ["Prisión de 1 a 6 años y multa", "Prisión de 2 a 8 años y multa", "Prisión de 3 a 10 años y multa", "Prisión de 1 a 4 años y multa"]},
+            {q: "Lavado Activos (Art. 303):", a: "Prisión de tres a diez años", o: ["Prisión de tres a diez años", "Prisión de dos a ocho años", "Prisión de cinco a quince años", "Prisión de uno a seis años"]},
+            {q: "Información privilegiada (Art. 307):", a: "Prisión de uno a cuatro años", o: ["Prisión de uno a cuatro años", "Prisión de dos a seis años", "Prisión de seis meses a tres años", "Prisión de un año a cinco años"]},
+            {q: "Manipulación mercado (Art. 309):", a: "Prisión de uno a cuatro años", o: ["Prisión de uno a cuatro años", "Prisión de dos a seis años", "Prisión de tres a ocho años", "Prisión de seis meses a tres años"]},
+            {q: "Financiación terrorismo (Art. 306):", a: "Prisión de cinco a quince años", o: ["Prisión de cinco a quince años", "Prisión de tres a diez años", "Prisión de ocho a veinte años", "Prisión de diez a veinticinco años"]},
+            {q: "Encubrimiento lavado (Art. 303 inc. 3):", a: "Prisión de seis meses a tres años", o: ["Prisión de seis meses a tres años", "Prisión de un mes a un año", "Prisión de uno a cinco años", "Prisión de dos a seis años"]},
+            {q: "Intermediación no autorizada (Art. 310):", a: "Prisión de uno a cuatro años", o: ["Prisión de uno a cuatro años", "Prisión de dos a seis años", "Prisión de tres a ocho años", "Prisión de seis meses a tres años"]},
+            {q: "Balance Falso (Art. 300 inc. 2):", a: "Prisión de seis meses a dos años", o: ["Prisión de seis meses a dos años", "Prisión de un mes a un año", "Prisión de uno a tres años", "Prisión de dos a seis años"]},
+            {q: "Agravante Lavado (Art. 303):", a: "Aumentará en un tercio del máximo", o: ["Aumentará en un tercio del máximo", "Aumentará en la mitad del mínimo", "La pena se duplicará siempre", "Se sumarán cinco años fijos"]},
+            {q: "Omisión informar (Art. 304):", a: "Multa de 1 a 10 veces el valor", o: ["Multa de 1 a 10 veces el valor", "Prisión de 1 a 3 años", "Inhabilitación de 6 meses", "Multa fija de un millón"]}
         ]
     };
 
-    let pActuales = [];
-    let idx = 0;
-    let ok = 0;
+    let pActuales = []; let idx = 0; let ok = 0;
 
     function start(m) {
-        pActuales = banco[m];
+        // Mezclamos las preguntas del bloque
+        pActuales = banco[m].sort(() => Math.random() - 0.5);
         document.getElementById('menu').classList.add('hidden');
         document.getElementById('quiz').classList.remove('hidden');
+        idx = 0; ok = 0;
         showQ();
     }
 
@@ -66,15 +139,19 @@
         oDiv.innerHTML = "";
         document.getElementById('next').classList.add('hidden');
 
-        d.o.forEach(t => {
+        // Mezclamos opciones
+        let opciones = [...d.o].sort(() => Math.random() - 0.5);
+        opciones.forEach(t => {
             let b = document.createElement('button');
-            b.className = "btn";
-            b.innerText = t;
+            b.className = "btn"; b.innerText = t;
             b.onclick = function() {
                 let all = oDiv.getElementsByTagName('button');
                 for(let x of all) x.disabled = true;
                 if(t === d.a) { this.classList.add('correct'); ok++; }
-                else { this.classList.add('wrong'); }
+                else { 
+                    this.classList.add('wrong'); 
+                    for(let x of all) if(x.innerText === d.a) x.classList.add('correct');
+                }
                 document.getElementById('next').classList.remove('hidden');
             };
             oDiv.appendChild(b);
@@ -88,7 +165,8 @@
             document.getElementById('quiz').classList.add('hidden');
             document.getElementById('res').classList.remove('hidden');
             let nota = (ok / pActuales.length) * 10;
-            document.getElementById('nota').innerText = "NOTA: " + nota;
+            document.getElementById('nota').innerText = "NOTA: " + nota.toFixed(1);
+            document.getElementById('msg').innerText = nota >= 7 ? "¡FELICITACIONES, DOCTORA!" : "HAY QUE REFORZAR ESCALAS PENALES";
             document.getElementById('img-res').src = nota >= 7 ? "ganaste.jpg" : "perdiste.jpg";
         }
     }
